@@ -2,3 +2,9 @@ body {
   background-color: #fafafa;
   margin: 0;
 }
+
+.page {
+  margin: auto;
+  position: relative;
+  width: 624px;
+}
