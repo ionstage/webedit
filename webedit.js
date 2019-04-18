@@ -52,7 +52,7 @@ const createPointer = (event) => {
   return { pageX, pageY, offsetX, offsetY, identifier }
 }
 
-const printTarget = () => {
+const printTargets = () => {
   const nodes = Array.from(document.querySelectorAll('._webedit_target'))
   if (nodes.length === 0) {
     return
@@ -71,7 +71,7 @@ const printTarget = () => {
   console.log(output)
 }
 
-const setInitialTargetSize = () => {
+const setInitialTargetsSize = () => {
   const nodes = Array.from(document.querySelectorAll('._webedit_target'))
   if (nodes.length === 0) {
     return
@@ -244,14 +244,14 @@ class Editable {
     style.borderRightColor = ''
     style.borderTopColor = ''
     style.borderBottomColor = ''
-    printTarget()
+    printTargets()
   }
 }
 
 const main = () => {
   insertCSSRules(CSS_RULES)
   document.body.classList.add('_webedit')
-  setInitialTargetSize()
+  setInitialTargetsSize()
   new Editable(document.body).enable()
 }
 
