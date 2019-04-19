@@ -33,6 +33,10 @@ const TYPE_START = (SUPPORTS_TOUCH ? 'touchstart' : 'mousedown')
 const TYPE_MOVE = (SUPPORTS_TOUCH ? 'touchmove' : 'mousemove')
 const TYPE_END = (SUPPORTS_TOUCH ? 'touchend' : 'mouseup')
 
+const redraw = (callback) => {
+  window.requestAnimationFrame(callback)
+}
+
 const insertCSSRules = (rules) => {
   const style = document.createElement('style')
   document.head.appendChild(style)
