@@ -165,6 +165,12 @@ class Draggable {
   }
 }
 
+class Target {
+  constructor (element) {
+    this.element = element
+  }
+}
+
 class Editable {
   constructor (element) {
     this.draggable = new Draggable(element)
