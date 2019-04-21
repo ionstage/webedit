@@ -58,9 +58,6 @@ const createPointer = (event) => {
 
 const printTargets = () => {
   const nodes = Array.from(document.querySelectorAll('._webedit_target'))
-  if (nodes.length === 0) {
-    return
-  }
   const output = nodes.reduce((s, node) => {
     const style = window.getComputedStyle(node)
     return s + [
@@ -77,9 +74,6 @@ const printTargets = () => {
 
 const setInitialTargetsSize = () => {
   const nodes = Array.from(document.querySelectorAll('._webedit_target'))
-  if (nodes.length === 0) {
-    return
-  }
   nodes.forEach((node) => {
     if (parseInt(window.getComputedStyle(node).width, 10) !== 0) {
       return
