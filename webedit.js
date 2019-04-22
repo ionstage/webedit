@@ -56,12 +56,11 @@ const createPointer = (event) => {
   return { pageX, pageY, offsetX, offsetY, identifier }
 }
 
-const printTargets = () => {
-  const nodes = Array.from(document.querySelectorAll('._webedit_target'))
-  const output = nodes.reduce((s, node) => {
-    const style = window.getComputedStyle(node)
+const printElements = (elements) => {
+  const output = elements.reduce((s, el) => {
+    const style = window.getComputedStyle(el)
     return s + [
-      `#${node.id} {`,
+      `#${el.id} {`,
       `  height: ${parseInt(style.height, 10)}px;`,
       `  left: ${parseInt(style.left, 10)}px;`,
       `  top: ${parseInt(style.top, 10)}px;`,
@@ -248,7 +247,7 @@ class Editable {
     style.borderRightColor = ''
     style.borderTopColor = ''
     style.borderBottomColor = ''
-    printTargets()
+    printElements(Array.from(document.querySelectorAll('._webedit_target')))
   }
 }
 
