@@ -71,18 +71,17 @@ const printElements = (elements) => {
   console.log(output)
 }
 
-const setInitialTargetsSize = () => {
-  const nodes = Array.from(document.querySelectorAll('._webedit_target'))
-  nodes.forEach((node) => {
-    if (parseInt(window.getComputedStyle(node).width, 10) !== 0) {
+const setInitialElementsSize = (elements) => {
+  elements.forEach((el) => {
+    if (parseInt(window.getComputedStyle(el).width, 10) !== 0) {
       return
     }
-    if (!(node.firstChild instanceof SVGElement)) {
+    if (!(el.firstChild instanceof SVGElement)) {
       return
     }
-    const baseVal = node.firstChild.viewBox.baseVal
-    node.style.width = baseVal.width.toFixed(3) + 'px'
-    node.style.height = baseVal.height.toFixed(3) + 'px'
+    const baseVal = el.firstChild.viewBox.baseVal
+    el.style.width = baseVal.width.toFixed(3) + 'px'
+    el.style.height = baseVal.height.toFixed(3) + 'px'
   })
 }
 
@@ -254,7 +253,7 @@ class Editable {
 const main = () => {
   insertCSSRules(CSS_RULES)
   document.body.classList.add('_webedit')
-  setInitialTargetsSize()
+  setInitialElementsSize(Array.from(document.querySelectorAll('._webedit_target')))
   new Editable(document.body).enable()
 }
 
