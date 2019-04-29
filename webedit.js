@@ -14,10 +14,6 @@ const TYPE_START = (SUPPORTS_TOUCH ? 'touchstart' : 'mousedown')
 const TYPE_MOVE = (SUPPORTS_TOUCH ? 'touchmove' : 'mousemove')
 const TYPE_END = (SUPPORTS_TOUCH ? 'touchend' : 'mouseup')
 
-const redraw = (callback) => {
-  window.requestAnimationFrame(callback)
-}
-
 const insertCSSRules = (rules) => {
   const style = document.createElement('style')
   document.head.appendChild(style)
@@ -140,15 +136,10 @@ class Draggable {
   }
 }
 
-class Target {
-  constructor (element) {
-    this.element = element
-  }
-}
-
 class Editable {
   constructor (element) {
     this.draggable = new Draggable(element)
+    this.requestID = 0
   }
 
   enable () {
@@ -209,11 +200,17 @@ class Editable {
         dtop += dy
       }
     }
-    const style = context.target.style
-    style.left = (context.left + dleft) + 'px'
-    style.top = (context.top + dtop) + 'px'
-    style.width = Math.max(context.width + dwidth, 24) + 'px'
-    style.height = Math.max(context.height + dheight, 24) + 'px'
+    if (this.requestID) {
+      window.cancelAnimationFrame(this.requestID)
+    }
+    this.requestID = window.requestAnimationFrame(() => {
+      const style = context.target.style
+      style.left = (context.left + dleft) + 'px'
+      style.top = (context.top + dtop) + 'px'
+      style.width = Math.max(context.width + dwidth, 24) + 'px'
+      style.height = Math.max(context.height + dheight, 24) + 'px'
+      this.requestID = 0
+    })
   }
 
   onend (dx, dy, event, context) {
