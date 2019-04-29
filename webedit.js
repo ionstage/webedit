@@ -140,6 +140,7 @@ class Editable {
   constructor (element) {
     this.draggable = new Draggable(element)
     this.requestID = 0
+    element.addEventListener('keydown', this.onkeydown.bind(this))
   }
 
   enable () {
@@ -227,6 +228,36 @@ class Editable {
     style.borderTopColor = ''
     style.borderBottomColor = ''
     printElements(Array.from(document.querySelectorAll('._webedit_target')))
+  }
+
+  onkeydown (event) {
+    const target = document.querySelector('._webedit_target')
+    if (!target) {
+      return
+    }
+    const style = window.getComputedStyle(target)
+    switch (event.which) {
+      // left
+      case 37:
+        event.preventDefault()
+        target.style.left = parseInt(style.left, 10) - 1 + 'px'
+        break
+      // up
+      case 38:
+        event.preventDefault()
+        target.style.top = parseInt(style.top, 10) - 1 + 'px'
+        break
+      // right
+      case 39:
+        event.preventDefault()
+        target.style.left = parseInt(style.left, 10) + 1 + 'px'
+        break
+      // down
+      case 40:
+        event.preventDefault()
+        target.style.top = parseInt(style.top, 10) + 1 + 'px'
+        break
+    }
   }
 }
 
