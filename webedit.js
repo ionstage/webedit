@@ -29,8 +29,10 @@ const createPointer = (event) => {
   const pageX = (touch || event).pageX
   const pageY = (touch || event).pageY
   const el = event.target
-  const offsetLeft = el.getBoundingClientRect().left - el.scrollLeft - document.body.getBoundingClientRect().left
-  const offsetTop = el.getBoundingClientRect().top - el.scrollTop - document.body.getBoundingClientRect().top
+  const elRect = el.getBoundingClientRect()
+  const bodyRect = document.body.getBoundingClientRect()
+  const offsetLeft = elRect.left - el.scrollLeft - bodyRect.left
+  const offsetTop = elRect.top - el.scrollTop - bodyRect.top
   const offsetX = pageX - offsetLeft
   const offsetY = pageY - offsetTop
   const identifier = (touch ? touch.identifier : null)
