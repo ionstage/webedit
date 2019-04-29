@@ -1,23 +1,4 @@
-const GRID_IMAGE_URI = [
-  'data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">',
-  '<defs>',
-  '<pattern id="smallGrid" width="24" height="24" patternUnits="userSpaceOnUse">',
-  '<path d="M 24 0 L 0 0 0 24" fill="none" stroke="gray" stroke-width="0.5" />',
-  '</pattern>',
-  '<pattern id="grid" width="120" height="120" patternUnits="userSpaceOnUse">',
-  '<rect width="120" height="120" fill="url(#smallGrid)" />',
-  '<path d="M 120 0 L 0 0 0 120" fill="none" stroke="gray" stroke-width="1" />',
-  '</pattern>',
-  '</defs>',
-  '<rect width="100%" height="100%" fill="url(#grid)" />',
-  '</svg>'
-].join('')
-
 const CSS_RULES = [
-  `._webedit ._webedit_container {
-    background-image: url('${GRID_IMAGE_URI}');
-    background-position: right 0.5px bottom 0.5px;
-  }`,
   `._webedit ._webedit_target {
     border: 1px solid cyan;
     margin: -1px;
