@@ -219,15 +219,17 @@ class Editable {
     if (!target) {
       return
     }
-    const rate = context.height / context.width
-    const width = parseInt(window.getComputedStyle(target).width, 10)
-    const style = target.style
-    style.height = (width * rate) + 'px'
-    style.borderLeftColor = ''
-    style.borderRightColor = ''
-    style.borderTopColor = ''
-    style.borderBottomColor = ''
-    printElements(Array.from(document.querySelectorAll('._webedit_target')))
+    window.requestAnimationFrame(() => {
+      const rate = context.height / context.width
+      const width = parseInt(window.getComputedStyle(target).width, 10)
+      const style = target.style
+      style.height = (width * rate) + 'px'
+      style.borderLeftColor = ''
+      style.borderRightColor = ''
+      style.borderTopColor = ''
+      style.borderBottomColor = ''
+      printElements(Array.from(document.querySelectorAll('._webedit_target')))
+    })
   }
 
   onkeydown (event) {
