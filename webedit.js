@@ -1,3 +1,9 @@
+/**
+ * webedit v0.1.0
+ * (c) 2019 iOnStage
+ * Released under the MIT License.
+ */
+
 const CSS_RULES = [
   `._webedit ._webedit_target {
     border: 1px solid cyan;
