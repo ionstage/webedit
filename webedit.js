@@ -56,20 +56,6 @@ const printElements = (elements) => {
   console.log(output)
 }
 
-const setInitialElementsSize = (elements) => {
-  elements.forEach((el) => {
-    if (parseInt(window.getComputedStyle(el).width, 10) !== 0) {
-      return
-    }
-    if (!(el.firstChild instanceof SVGElement)) {
-      return
-    }
-    const baseVal = el.firstChild.viewBox.baseVal
-    el.style.width = baseVal.width.toFixed(3) + 'px'
-    el.style.height = baseVal.height.toFixed(3) + 'px'
-  })
-}
-
 class Draggable {
   constructor (element) {
     this.element = element
@@ -272,7 +258,6 @@ class Editable {
 const main = () => {
   insertCSSRules(CSS_RULES)
   document.body.classList.add('_webedit')
-  setInitialElementsSize(Array.from(document.querySelectorAll('._webedit_target')))
   new Editable(document.body).enable()
 }
 
