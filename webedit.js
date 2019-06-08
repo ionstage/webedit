@@ -46,7 +46,6 @@ const printElements = (elements) => {
     const style = window.getComputedStyle(el)
     return s + [
       `#${el.id} {`,
-      `  height: ${parseInt(style.height, 10)}px;`,
       `  left: ${parseInt(style.left, 10)}px;`,
       `  top: ${parseInt(style.top, 10)}px;`,
       `  width: ${parseInt(style.width, 10)}px;`,
@@ -182,12 +181,9 @@ class Editable {
       }
     }
     let dtop = 0
-    let dheight = 0
     if (context.isBottomEdge) {
-      dheight += dy
     } else if (context.isTopEdge) {
       dtop += dy
-      dheight -= dy
     } else {
       if (!context.isRightEdge && !context.isLeftEdge) {
         dtop += dy
@@ -201,7 +197,6 @@ class Editable {
       style.left = (context.left + dleft) + 'px'
       style.top = (context.top + dtop) + 'px'
       style.width = Math.max(context.width + dwidth, 24) + 'px'
-      style.height = Math.max(context.height + dheight, 24) + 'px'
       this.requestID = 0
     })
   }
@@ -212,10 +207,7 @@ class Editable {
       return
     }
     window.requestAnimationFrame(() => {
-      const rate = context.height / context.width
-      const width = parseInt(window.getComputedStyle(target).width, 10)
       const style = target.style
-      style.height = (width * rate) + 'px'
       style.borderLeftColor = ''
       style.borderRightColor = ''
       style.borderTopColor = ''
