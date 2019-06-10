@@ -156,12 +156,8 @@ class Editable {
     context.height = parseInt(style.height, 10)
     context.isLeftEdge = (x >= 0 && x <= 12)
     context.isRightEdge = (context.width - 12 <= x && x <= context.width)
-    context.isTopEdge = (y >= 0 && y <= 12)
-    context.isBottomEdge = (context.height - 12 <= y && y <= context.height)
     target.style.borderLeftColor = (context.isLeftEdge ? 'orange' : '')
     target.style.borderRightColor = (context.isRightEdge ? 'orange' : '')
-    target.style.borderTopColor = (context.isTopEdge ? 'orange' : '')
-    target.style.borderBottomColor = (context.isBottomEdge ? 'orange' : '')
   }
 
   onmove (dx, dy, event, context) {
@@ -176,18 +172,11 @@ class Editable {
       dleft += dx
       dwidth -= dx
     } else {
-      if (!context.isBottomEdge && !context.isTopEdge) {
-        dleft += dx
-      }
+      dleft += dx
     }
     let dtop = 0
-    if (context.isBottomEdge) {
-    } else if (context.isTopEdge) {
+    if (!context.isRightEdge && !context.isLeftEdge) {
       dtop += dy
-    } else {
-      if (!context.isRightEdge && !context.isLeftEdge) {
-        dtop += dy
-      }
     }
     if (this.requestID) {
       window.cancelAnimationFrame(this.requestID)
@@ -210,8 +199,6 @@ class Editable {
       const style = target.style
       style.borderLeftColor = ''
       style.borderRightColor = ''
-      style.borderTopColor = ''
-      style.borderBottomColor = ''
       printElements(Array.from(document.querySelectorAll('._webedit_target')))
     })
   }
