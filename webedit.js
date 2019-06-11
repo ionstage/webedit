@@ -131,6 +131,7 @@ class Editable {
   constructor (element) {
     this.draggable = new Draggable(element)
     this.requestID = 0
+    this.selectedTarget = null
     element.addEventListener('keydown', this.onkeydown.bind(this))
   }
 
@@ -148,6 +149,7 @@ class Editable {
     if (!context.target) {
       return
     }
+    this.selectedTarget = context.target
     event.preventDefault()
     const style = window.getComputedStyle(target)
     context.left = parseInt(style.left, 10)
@@ -204,31 +206,33 @@ class Editable {
   }
 
   onkeydown (event) {
-    const target = document.querySelector('._webedit_target')
-    if (!target) {
-      return
+    if (!this.selectedTarget) {
+      this.selectedTarget = document.querySelector('._webedit_target')
+      if (!this.selectedTarget) {
+        return
+      }
     }
-    const style = window.getComputedStyle(target)
+    const style = window.getComputedStyle(this.selectedTarget)
     switch (event.which) {
       // left
       case 37:
         event.preventDefault()
-        target.style.left = parseInt(style.left, 10) - 1 + 'px'
+        this.selectedTarget.style.left = parseInt(style.left, 10) - 1 + 'px'
         break
       // up
       case 38:
         event.preventDefault()
-        target.style.top = parseInt(style.top, 10) - 1 + 'px'
+        this.selectedTarget.style.top = parseInt(style.top, 10) - 1 + 'px'
         break
       // right
       case 39:
         event.preventDefault()
-        target.style.left = parseInt(style.left, 10) + 1 + 'px'
+        this.selectedTarget.style.left = parseInt(style.left, 10) + 1 + 'px'
         break
       // down
       case 40:
         event.preventDefault()
-        target.style.top = parseInt(style.top, 10) + 1 + 'px'
+        this.selectedTarget.style.top = parseInt(style.top, 10) + 1 + 'px'
         break
     }
   }
