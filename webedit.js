@@ -155,7 +155,6 @@ class Editable {
     context.left = parseInt(style.left, 10)
     context.top = parseInt(style.top, 10)
     context.width = parseInt(style.width, 10)
-    context.height = parseInt(style.height, 10)
     context.isLeftEdge = (x >= 0 && x <= 12)
     context.isRightEdge = (context.width - 12 <= x && x <= context.width)
     target.style.borderLeftColor = (context.isLeftEdge ? 'orange' : '')
