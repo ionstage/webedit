@@ -166,6 +166,7 @@ class Editable {
       return
     }
     let dleft = 0
+    let dtop = 0
     let dwidth = 0
     if (context.isRightEdge) {
       dwidth += dx
@@ -174,9 +175,6 @@ class Editable {
       dwidth -= dx
     } else {
       dleft += dx
-    }
-    let dtop = 0
-    if (!context.isRightEdge && !context.isLeftEdge) {
       dtop += dy
     }
     if (this.requestID) {
