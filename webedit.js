@@ -131,7 +131,7 @@ class Editable {
   constructor (element) {
     this.draggable = new Draggable(element)
     this.requestID = 0
-    this.selectedTarget = null
+    this.target = null
     element.addEventListener('keydown', this.onkeydown.bind(this))
   }
 
@@ -145,11 +145,10 @@ class Editable {
 
   onstart (x, y, event, context) {
     const target = event.target
-    context.target = (target.classList.contains('_webedit_target') ? target : null)
-    if (!context.target) {
+    this.target = (target.classList.contains('_webedit_target') ? target : null)
+    if (!this.target) {
       return
     }
-    this.selectedTarget = context.target
     event.preventDefault()
     const style = window.getComputedStyle(target)
     context.left = parseInt(style.left, 10)
@@ -162,7 +161,7 @@ class Editable {
   }
 
   onmove (dx, dy, event, context) {
-    if (!context.target) {
+    if (!this.target) {
       return
     }
     let dleft = 0
@@ -181,7 +180,7 @@ class Editable {
       window.cancelAnimationFrame(this.requestID)
     }
     this.requestID = window.requestAnimationFrame(() => {
-      const style = context.target.style
+      const style = this.target.style
       style.left = (context.left + dleft) + 'px'
       style.top = (context.top + dtop) + 'px'
       style.width = Math.max(context.width + dwidth, 24) + 'px'
@@ -190,7 +189,7 @@ class Editable {
   }
 
   onend (dx, dy, event, context) {
-    const target = context.target
+    const target = this.target
     if (!target) {
       return
     }
@@ -203,33 +202,33 @@ class Editable {
   }
 
   onkeydown (event) {
-    if (!this.selectedTarget) {
-      this.selectedTarget = document.querySelector('._webedit_target')
-      if (!this.selectedTarget) {
+    if (!this.target) {
+      this.target = document.querySelector('._webedit_target')
+      if (!this.target) {
         return
       }
     }
-    const style = window.getComputedStyle(this.selectedTarget)
+    const style = window.getComputedStyle(this.target)
     switch (event.which) {
       // left
       case 37:
         event.preventDefault()
-        this.selectedTarget.style.left = parseInt(style.left, 10) - 1 + 'px'
+        this.target.style.left = parseInt(style.left, 10) - 1 + 'px'
         break
       // up
       case 38:
         event.preventDefault()
-        this.selectedTarget.style.top = parseInt(style.top, 10) - 1 + 'px'
+        this.target.style.top = parseInt(style.top, 10) - 1 + 'px'
         break
       // right
       case 39:
         event.preventDefault()
-        this.selectedTarget.style.left = parseInt(style.left, 10) + 1 + 'px'
+        this.target.style.left = parseInt(style.left, 10) + 1 + 'px'
         break
       // down
       case 40:
         event.preventDefault()
-        this.selectedTarget.style.top = parseInt(style.top, 10) + 1 + 'px'
+        this.target.style.top = parseInt(style.top, 10) + 1 + 'px'
         break
     }
   }
