@@ -203,10 +203,7 @@ class Editable {
 
   onkeydown (event) {
     if (!this.target) {
-      this.target = document.querySelector('._webedit_target')
-      if (!this.target) {
-        return
-      }
+      return
     }
     const style = window.getComputedStyle(this.target)
     switch (event.which) {
