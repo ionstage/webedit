@@ -144,20 +144,19 @@ class Editable {
   }
 
   onstart (x, y, event, context) {
-    const target = event.target
-    this.target = (target.classList.contains('_webedit_target') ? target : null)
+    this.target = (event.target.classList.contains('_webedit_target') ? event.target : null)
     if (!this.target) {
       return
     }
     event.preventDefault()
-    const style = window.getComputedStyle(target)
+    const style = window.getComputedStyle(this.target)
     context.left = parseInt(style.left, 10)
     context.top = parseInt(style.top, 10)
     context.width = parseInt(style.width, 10)
     context.isLeftEdge = (x >= 0 && x <= 12)
     context.isRightEdge = (context.width - 12 <= x && x <= context.width)
-    target.style.borderLeftColor = (context.isLeftEdge ? 'orange' : '')
-    target.style.borderRightColor = (context.isRightEdge ? 'orange' : '')
+    this.target.style.borderLeftColor = (context.isLeftEdge ? 'orange' : '')
+    this.target.style.borderRightColor = (context.isRightEdge ? 'orange' : '')
   }
 
   onmove (dx, dy, event, context) {
@@ -180,23 +179,20 @@ class Editable {
       window.cancelAnimationFrame(this.requestID)
     }
     this.requestID = window.requestAnimationFrame(() => {
-      const style = this.target.style
-      style.left = (context.left + dleft) + 'px'
-      style.top = (context.top + dtop) + 'px'
-      style.width = Math.max(context.width + dwidth, 24) + 'px'
+      this.target.style.left = (context.left + dleft) + 'px'
+      this.target.style.top = (context.top + dtop) + 'px'
+      this.target.style.width = Math.max(context.width + dwidth, 24) + 'px'
       this.requestID = 0
     })
   }
 
   onend (dx, dy, event, context) {
-    const target = this.target
-    if (!target) {
+    if (!this.target) {
       return
     }
     window.requestAnimationFrame(() => {
-      const style = target.style
-      style.borderLeftColor = ''
-      style.borderRightColor = ''
+      this.target.style.borderLeftColor = ''
+      this.target.style.borderRightColor = ''
       printElements(Array.from(document.querySelectorAll('._webedit_target')))
     })
   }
