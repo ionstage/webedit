@@ -10,6 +10,9 @@ const CSS_RULES = [
     margin: -1px;
     pointer-events: auto;
   }`,
+  `._webedit ._webedit_selected {
+    border-color: red;
+  }`,
   `._webedit :not(._webedit_target) {
     pointer-events: none;
   }`
@@ -144,11 +147,16 @@ class Editable {
   }
 
   onstart (x, y, event, context) {
-    this.target = (event.target.classList.contains('_webedit_target') ? event.target : null)
-    if (!this.target) {
+    if (!event.target.classList.contains('_webedit_target')) {
+      if (this.target) {
+        this.target.classList.remove('_webedit_selected')
+        this.target = null
+      }
       return
     }
     event.preventDefault()
+    this.target = event.target
+    this.target.classList.add('_webedit_selected')
     const style = window.getComputedStyle(this.target)
     context.left = parseInt(style.left, 10)
     context.top = parseInt(style.top, 10)
