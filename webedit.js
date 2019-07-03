@@ -44,17 +44,15 @@ const createPointer = (event) => {
   return { pageX, pageY, offsetX, offsetY, identifier }
 }
 
-const printElements = (elements) => {
-  const output = elements.reduce((s, el) => {
-    const style = window.getComputedStyle(el)
-    return s + [
-      `#${el.id} {`,
-      `  left: ${parseInt(style.left, 10)}px;`,
-      `  top: ${parseInt(style.top, 10)}px;`,
-      `  width: ${parseInt(style.width, 10)}px;`,
-      '}\n\n'
-    ].join('\n')
-  }, '')
+const printElement = (element) => {
+  const style = window.getComputedStyle(element)
+  const output = [
+    `#${element.id} {`,
+    `  left: ${parseInt(style.left, 10)}px;`,
+    `  top: ${parseInt(style.top, 10)}px;`,
+    `  width: ${parseInt(style.width, 10)}px;`,
+    '}\n\n'
+  ].join('\n')
   console.log(output)
 }
 
@@ -201,7 +199,7 @@ class Editable {
     window.requestAnimationFrame(() => {
       this.target.style.borderLeftColor = ''
       this.target.style.borderRightColor = ''
-      printElements(Array.from(document.querySelectorAll('._webedit_target')))
+      printElement(this.target)
     })
   }
 
