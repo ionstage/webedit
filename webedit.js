@@ -145,11 +145,11 @@ class Editable {
   }
 
   onstart (x, y, event, context) {
+    if (this.target && this.target !== event.target) {
+      this.target.classList.remove('_webedit_selected')
+    }
     if (!event.target.classList.contains('_webedit_target')) {
-      if (this.target) {
-        this.target.classList.remove('_webedit_selected')
-        this.target = null
-      }
+      this.target = null
       return
     }
     event.preventDefault()
