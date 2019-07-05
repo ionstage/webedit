@@ -29,21 +29,6 @@ const insertCSSRules = (rules) => {
   rules.forEach((rule, index) => style.sheet.insertRule(rule, index))
 }
 
-const createPointer = (event) => {
-  const touch = (SUPPORTS_TOUCH && 'changedTouches' in event ? event.changedTouches[0] : null)
-  const pageX = (touch || event).pageX
-  const pageY = (touch || event).pageY
-  const el = event.target
-  const elRect = el.getBoundingClientRect()
-  const bodyRect = document.body.getBoundingClientRect()
-  const offsetLeft = elRect.left - el.scrollLeft - bodyRect.left
-  const offsetTop = elRect.top - el.scrollTop - bodyRect.top
-  const offsetX = pageX - offsetLeft
-  const offsetY = pageY - offsetTop
-  const identifier = (touch ? touch.identifier : null)
-  return { pageX, pageY, offsetX, offsetY, identifier }
-}
-
 const printElement = (element) => {
   const style = window.getComputedStyle(element)
   const output = [
@@ -72,6 +57,21 @@ class Draggable {
     this.context = {}
   }
 
+  static createPointer (event) {
+    const touch = (SUPPORTS_TOUCH && 'changedTouches' in event ? event.changedTouches[0] : null)
+    const pageX = (touch || event).pageX
+    const pageY = (touch || event).pageY
+    const el = event.target
+    const elRect = el.getBoundingClientRect()
+    const bodyRect = document.body.getBoundingClientRect()
+    const offsetLeft = elRect.left - el.scrollLeft - bodyRect.left
+    const offsetTop = elRect.top - el.scrollTop - bodyRect.top
+    const offsetX = pageX - offsetLeft
+    const offsetY = pageY - offsetTop
+    const identifier = (touch ? touch.identifier : null)
+    return { pageX, pageY, offsetX, offsetY, identifier }
+  }
+
   enable (listeners) {
     this.onstart = listeners.onstart
     this.onmove = listeners.onmove
@@ -95,7 +95,7 @@ class Draggable {
       return
     }
     this.lock = true
-    const p = createPointer(event)
+    const p = Draggable.createPointer(event)
     this.identifier = p.identifier
     this.startPageX = p.pageX
     this.startPageY = p.pageY
@@ -105,7 +105,7 @@ class Draggable {
   }
 
   move (event) {
-    const p = createPointer(event)
+    const p = Draggable.createPointer(event)
     if (this.identifier && this.identifier !== p.identifier) {
       return
     }
@@ -115,7 +115,7 @@ class Draggable {
   }
 
   end (event) {
-    const p = createPointer(event)
+    const p = Draggable.createPointer(event)
     if (this.identifier && this.identifier !== p.identifier) {
       return
     }
