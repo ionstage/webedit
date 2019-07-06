@@ -42,14 +42,14 @@ const printElement = (element) => {
 }
 
 class Draggable {
-  constructor (element) {
-    this.element = element
+  constructor (props) {
+    this.element = props.element
+    this.onstart = props.onstart
+    this.onmove = props.onmove
+    this.onend = props.onend
     this.start = this.start.bind(this)
     this.move = this.move.bind(this)
     this.end = this.end.bind(this)
-    this.onstart = null
-    this.onmove = null
-    this.onend = null
     this.lock = false
     this.identifier = null
     this.startPageX = 0
@@ -72,10 +72,7 @@ class Draggable {
     return { pageX, pageY, offsetX, offsetY, identifier }
   }
 
-  enable (listeners) {
-    this.onstart = listeners.onstart
-    this.onmove = listeners.onmove
-    this.onend = listeners.onend
+  enable () {
     this.element.addEventListener(TYPE_START, this.start, { passive: false })
   }
 
@@ -83,9 +80,6 @@ class Draggable {
     this.element.removeEventListener(TYPE_START, this.start, { passive: false })
     document.removeEventListener(TYPE_MOVE, this.move)
     document.removeEventListener(TYPE_END, this.end)
-    this.onstart = null
-    this.onmove = null
-    this.onend = null
     this.lock = false
     this.context = {}
   }
@@ -130,18 +124,17 @@ class Draggable {
 
 class Editable {
   constructor (element) {
-    this.draggable = new Draggable(element)
+    const onstart = this.onstart.bind(this)
+    const onmove = this.onmove.bind(this)
+    const onend = this.onend.bind(this)
+    this.draggable = new Draggable({ element, onstart, onmove, onend })
     this.requestID = 0
     this.target = null
     element.addEventListener('keydown', this.onkeydown.bind(this))
   }
 
   enable () {
-    this.draggable.enable({
-      onstart: this.onstart.bind(this),
-      onmove: this.onmove.bind(this),
-      onend: this.onend.bind(this)
-    })
+    this.draggable.enable()
   }
 
   onstart (x, y, event, context) {
