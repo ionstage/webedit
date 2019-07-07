@@ -55,6 +55,7 @@ class Draggable {
     this.startPageX = 0
     this.startPageY = 0
     this.context = {}
+    this.element.addEventListener(TYPE_START, this.start, { passive: false })
   }
 
   static createPointer (event) {
@@ -131,10 +132,6 @@ class Editable {
     this.requestID = 0
     this.target = null
     element.addEventListener('keydown', this.onkeydown.bind(this))
-  }
-
-  enable () {
-    this.draggable.enable()
   }
 
   onstart (x, y, event, context) {
@@ -229,7 +226,7 @@ class Editable {
 const main = () => {
   insertCSSRules(CSS_RULES)
   document.body.classList.add('_webedit')
-  new Editable(document.body).enable()
+  new Editable(document.body)
 }
 
 main()
