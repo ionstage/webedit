@@ -50,7 +50,6 @@ class Draggable {
     this.start = this.start.bind(this)
     this.move = this.move.bind(this)
     this.end = this.end.bind(this)
-    this.lock = false
     this.identifier = null
     this.startPageX = 0
     this.startPageY = 0
@@ -81,15 +80,13 @@ class Draggable {
     this.element.removeEventListener(TYPE_START, this.start, { passive: false })
     document.removeEventListener(TYPE_MOVE, this.move)
     document.removeEventListener(TYPE_END, this.end)
-    this.lock = false
     this.context = {}
   }
 
   start (event) {
-    if (this.lock) {
+    if ('touches' in event && event.touches.length > 1) {
       return
     }
-    this.lock = true
     const p = Draggable.createPointer(event)
     this.identifier = p.identifier
     this.startPageX = p.pageX
@@ -119,7 +116,6 @@ class Draggable {
     const dx = p.pageX - this.startPageX
     const dy = p.pageY - this.startPageY
     this.onend.call(null, dx, dy, event, this.context)
-    this.lock = false
   }
 }
 
