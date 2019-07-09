@@ -53,7 +53,6 @@ class Draggable {
     this.identifier = null
     this.startPageX = 0
     this.startPageY = 0
-    this.context = {}
     this.element.addEventListener(TYPE_START, this.start, { passive: false })
   }
 
@@ -80,7 +79,6 @@ class Draggable {
     this.element.removeEventListener(TYPE_START, this.start, { passive: false })
     document.removeEventListener(TYPE_MOVE, this.move)
     document.removeEventListener(TYPE_END, this.end)
-    this.context = {}
   }
 
   start (event) {
@@ -91,7 +89,7 @@ class Draggable {
     this.identifier = p.identifier
     this.startPageX = p.pageX
     this.startPageY = p.pageY
-    this.onstart.call(null, p.offsetX, p.offsetY, event, this.context)
+    this.onstart.call(null, p.offsetX, p.offsetY, event)
     document.addEventListener(TYPE_MOVE, this.move)
     document.addEventListener(TYPE_END, this.end)
   }
@@ -103,7 +101,7 @@ class Draggable {
     }
     const dx = p.pageX - this.startPageX
     const dy = p.pageY - this.startPageY
-    this.onmove.call(null, dx, dy, event, this.context)
+    this.onmove.call(null, dx, dy, event)
   }
 
   end (event) {
@@ -115,7 +113,7 @@ class Draggable {
     document.removeEventListener(TYPE_END, this.end)
     const dx = p.pageX - this.startPageX
     const dy = p.pageY - this.startPageY
-    this.onend.call(null, dx, dy, event, this.context)
+    this.onend.call(null, dx, dy, event)
   }
 }
 
@@ -127,10 +125,11 @@ class Editable {
     this.draggable = new Draggable({ element, onstart, onmove, onend })
     this.requestID = 0
     this.target = null
+    this.context = {}
     element.addEventListener('keydown', this.onkeydown.bind(this))
   }
 
-  onstart (x, y, event, context) {
+  onstart (x, y, event) {
     if (this.target && this.target !== event.target) {
       this.target.classList.remove('_webedit_selected')
     }
@@ -142,25 +141,25 @@ class Editable {
     this.target = event.target
     this.target.classList.add('_webedit_selected')
     const style = window.getComputedStyle(this.target)
-    context.left = parseInt(style.left, 10)
-    context.top = parseInt(style.top, 10)
-    context.width = parseInt(style.width, 10)
-    context.isLeftEdge = (x >= 0 && x <= 12)
-    context.isRightEdge = (context.width - 12 <= x && x <= context.width)
-    this.target.style.borderLeftColor = (context.isLeftEdge ? 'orange' : '')
-    this.target.style.borderRightColor = (context.isRightEdge ? 'orange' : '')
+    this.context.left = parseInt(style.left, 10)
+    this.context.top = parseInt(style.top, 10)
+    this.context.width = parseInt(style.width, 10)
+    this.context.isLeftEdge = (x >= 0 && x <= 12)
+    this.context.isRightEdge = (this.context.width - 12 <= x && x <= this.context.width)
+    this.target.style.borderLeftColor = (this.context.isLeftEdge ? 'orange' : '')
+    this.target.style.borderRightColor = (this.context.isRightEdge ? 'orange' : '')
   }
 
-  onmove (dx, dy, event, context) {
+  onmove (dx, dy, event) {
     if (!this.target) {
       return
     }
     let dleft = 0
     let dtop = 0
     let dwidth = 0
-    if (context.isRightEdge) {
+    if (this.context.isRightEdge) {
       dwidth += dx
-    } else if (context.isLeftEdge) {
+    } else if (this.context.isLeftEdge) {
       dleft += dx
       dwidth -= dx
     } else {
@@ -171,14 +170,14 @@ class Editable {
       window.cancelAnimationFrame(this.requestID)
     }
     this.requestID = window.requestAnimationFrame(() => {
-      this.target.style.left = (context.left + dleft) + 'px'
-      this.target.style.top = (context.top + dtop) + 'px'
-      this.target.style.width = Math.max(context.width + dwidth, 24) + 'px'
+      this.target.style.left = (this.context.left + dleft) + 'px'
+      this.target.style.top = (this.context.top + dtop) + 'px'
+      this.target.style.width = Math.max(this.context.width + dwidth, 24) + 'px'
       this.requestID = 0
     })
   }
 
-  onend (dx, dy, event, context) {
+  onend (dx, dy, event) {
     if (!this.target) {
       return
     }
