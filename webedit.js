@@ -29,18 +29,6 @@ const insertCSSRules = (rules) => {
   rules.forEach((rule, index) => style.sheet.insertRule(rule, index))
 }
 
-const printElement = (element) => {
-  const style = window.getComputedStyle(element)
-  const output = [
-    `#${element.id} {`,
-    `  left: ${parseInt(style.left, 10)}px;`,
-    `  top: ${parseInt(style.top, 10)}px;`,
-    `  width: ${parseInt(style.width, 10)}px;`,
-    '}\n\n'
-  ].join('\n')
-  console.log(output)
-}
-
 class Draggable {
   constructor (props) {
     this.element = props.element
@@ -129,6 +117,18 @@ class Editable {
     element.addEventListener('keydown', this.onkeydown.bind(this))
   }
 
+  static printElement (element) {
+    const style = window.getComputedStyle(element)
+    const output = [
+      `#${element.id} {`,
+      `  left: ${parseInt(style.left, 10)}px;`,
+      `  top: ${parseInt(style.top, 10)}px;`,
+      `  width: ${parseInt(style.width, 10)}px;`,
+      '}\n\n'
+    ].join('\n')
+    console.log(output)
+  }
+
   onstart (x, y, event) {
     if (this.target && this.target !== event.target) {
       this.target.classList.remove('_webedit_selected')
@@ -184,7 +184,7 @@ class Editable {
     window.requestAnimationFrame(() => {
       this.target.style.borderLeftColor = ''
       this.target.style.borderRightColor = ''
-      printElement(this.target)
+      Editable.printElement(this.target)
     })
   }
 
