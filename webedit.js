@@ -45,7 +45,7 @@ class Draggable {
   }
 
   static createPointer (event) {
-    const touch = (SUPPORTS_TOUCH && 'changedTouches' in event ? event.changedTouches[0] : null)
+    const touch = ('changedTouches' in event ? event.changedTouches[0] : null)
     const pageX = (touch || event).pageX
     const pageY = (touch || event).pageY
     const el = event.target
