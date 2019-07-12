@@ -59,16 +59,6 @@ class Draggable {
     return { pageX, pageY, offsetX, offsetY, identifier }
   }
 
-  enable () {
-    this.element.addEventListener(TYPE_START, this.start, { passive: false })
-  }
-
-  disable () {
-    this.element.removeEventListener(TYPE_START, this.start, { passive: false })
-    document.removeEventListener(TYPE_MOVE, this.move)
-    document.removeEventListener(TYPE_END, this.end)
-  }
-
   start (event) {
     if ('touches' in event && event.touches.length > 1) {
       return
