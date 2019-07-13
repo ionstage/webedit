@@ -116,9 +116,7 @@ class Draggable {
     }
     document.removeEventListener(TYPE_MOVE, this['on' + TYPE_MOVE])
     document.removeEventListener(TYPE_END, this['on' + TYPE_END])
-    const dx = p.pageX - this.startPageX
-    const dy = p.pageY - this.startPageY
-    this.onend.call(null, dx, dy, event)
+    this.onend.call(null, event)
   }
 }
 
@@ -194,7 +192,7 @@ class Editable {
     })
   }
 
-  onend (dx, dy, event) {
+  onend (event) {
     if (!this.target) {
       return
     }
