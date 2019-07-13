@@ -35,13 +35,16 @@ class Draggable {
     this.onstart = props.onstart
     this.onmove = props.onmove
     this.onend = props.onend
-    this.start = this.start.bind(this)
-    this.move = this.move.bind(this)
-    this.end = this.end.bind(this)
+    this.onmousedown = this.onmousedown.bind(this)
+    this.onmousemove = this.onmousemove.bind(this)
+    this.onmouseup = this.onmouseup.bind(this)
+    this.ontouchstart = this.ontouchstart.bind(this)
+    this.ontouchmove = this.ontouchmove.bind(this)
+    this.ontouchend = this.ontouchend.bind(this)
     this.identifier = null
     this.startPageX = 0
     this.startPageY = 0
-    this.element.addEventListener(TYPE_START, this.start, { passive: false })
+    this.element.addEventListener(TYPE_START, this['on' + TYPE_START], { passive: false })
   }
 
   static createPointer (event) {
@@ -59,6 +62,30 @@ class Draggable {
     return { pageX, pageY, offsetX, offsetY, identifier }
   }
 
+  onmousedown (event) {
+    this.start(event)
+  }
+
+  onmousemove (event) {
+    this.move(event)
+  }
+
+  onmouseup (event) {
+    this.end(event)
+  }
+
+  ontouchstart (event) {
+    this.start(event)
+  }
+
+  ontouchmove (event) {
+    this.move(event)
+  }
+
+  ontouchend (event) {
+    this.end(event)
+  }
+
   start (event) {
     if ('touches' in event && event.touches.length > 1) {
       return
@@ -68,8 +95,8 @@ class Draggable {
     this.startPageX = p.pageX
     this.startPageY = p.pageY
     this.onstart.call(null, p.offsetX, p.offsetY, event)
-    document.addEventListener(TYPE_MOVE, this.move)
-    document.addEventListener(TYPE_END, this.end)
+    document.addEventListener(TYPE_MOVE, this['on' + TYPE_MOVE])
+    document.addEventListener(TYPE_END, this['on' + TYPE_END])
   }
 
   move (event) {
@@ -87,8 +114,8 @@ class Draggable {
     if (this.identifier && this.identifier !== p.identifier) {
       return
     }
-    document.removeEventListener(TYPE_MOVE, this.move)
-    document.removeEventListener(TYPE_END, this.end)
+    document.removeEventListener(TYPE_MOVE, this['on' + TYPE_MOVE])
+    document.removeEventListener(TYPE_END, this['on' + TYPE_END])
     const dx = p.pageX - this.startPageX
     const dy = p.pageY - this.startPageY
     this.onend.call(null, dx, dy, event)
