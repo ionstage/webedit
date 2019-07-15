@@ -75,6 +75,9 @@ class Draggable {
   }
 
   ontouchstart (event) {
+    if (event.touches.length > 1) {
+      return
+    }
     this.start(event)
   }
 
@@ -87,9 +90,6 @@ class Draggable {
   }
 
   start (event) {
-    if ('touches' in event && event.touches.length > 1) {
-      return
-    }
     const p = Draggable.createPointer(event)
     this.identifier = p.identifier
     this.startPageX = p.pageX
