@@ -58,8 +58,7 @@ class Draggable {
     const offsetTop = elRect.top - el.scrollTop - bodyRect.top
     const offsetX = pageX - offsetLeft
     const offsetY = pageY - offsetTop
-    const identifier = (touch ? touch.identifier : null)
-    return { pageX, pageY, offsetX, offsetY, identifier }
+    return { pageX, pageY, offsetX, offsetY }
   }
 
   onmousedown (event) {
@@ -78,20 +77,29 @@ class Draggable {
     if (event.touches.length > 1) {
       return
     }
+    const touch = event.changedTouches[0]
+    this.identifier = touch.identifier
     this.start(event)
   }
 
   ontouchmove (event) {
+    const touch = event.changedTouches[0]
+    if (touch.identifier !== this.identifier) {
+      return
+    }
     this.move(event)
   }
 
   ontouchend (event) {
+    const touch = event.changedTouches[0]
+    if (touch.identifier !== this.identifier) {
+      return
+    }
     this.end(event)
   }
 
   start (event) {
     const p = Draggable.createPointer(event)
-    this.identifier = p.identifier
     this.startPageX = p.pageX
     this.startPageY = p.pageY
     this.onstart.call(null, p.offsetX, p.offsetY, event)
@@ -101,19 +109,12 @@ class Draggable {
 
   move (event) {
     const p = Draggable.createPointer(event)
-    if (this.identifier && this.identifier !== p.identifier) {
-      return
-    }
     const dx = p.pageX - this.startPageX
     const dy = p.pageY - this.startPageY
     this.onmove.call(null, dx, dy, event)
   }
 
   end (event) {
-    const p = Draggable.createPointer(event)
-    if (this.identifier && this.identifier !== p.identifier) {
-      return
-    }
     document.removeEventListener(TYPE_MOVE, this['on' + TYPE_MOVE])
     document.removeEventListener(TYPE_END, this['on' + TYPE_END])
     this.onend.call(null, event)
