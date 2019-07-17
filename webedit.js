@@ -44,7 +44,6 @@ class Draggable {
     this.identifier = null
     this.startPageX = 0
     this.startPageY = 0
-    this.element.addEventListener(TYPE_START, this['on' + TYPE_START], { passive: false })
   }
 
   static createPointer (event) {
@@ -59,6 +58,10 @@ class Draggable {
     const offsetX = pageX - offsetLeft
     const offsetY = pageY - offsetTop
     return { pageX, pageY, offsetX, offsetY }
+  }
+
+  enable () {
+    this.element.addEventListener(TYPE_START, this['on' + TYPE_START], { passive: false })
   }
 
   onmousedown (event) {
@@ -126,11 +129,11 @@ class Editable {
     const onstart = this.onstart.bind(this)
     const onmove = this.onmove.bind(this)
     const onend = this.onend.bind(this)
+    this.element = element
     this.draggable = new Draggable({ element, onstart, onmove, onend })
     this.requestID = 0
     this.target = null
     this.context = {}
-    element.addEventListener('keydown', this.onkeydown.bind(this))
   }
 
   static printElement (element) {
@@ -143,6 +146,11 @@ class Editable {
       '}\n\n'
     ].join('\n')
     console.log(output)
+  }
+
+  enable () {
+    this.draggable.enable()
+    this.element.addEventListener('keydown', this.onkeydown.bind(this))
   }
 
   onstart (x, y, event) {
@@ -237,7 +245,7 @@ class Editable {
 const main = () => {
   insertCSSRules(CSS_RULES)
   document.body.classList.add('_webedit')
-  new Editable(document.body)
+  new Editable(document.body).enable()
 }
 
 main()
