@@ -46,17 +46,21 @@ class Draggable {
     this.startPageY = 0
   }
 
+  static getOffset (element) {
+    const rect = element.getBoundingClientRect()
+    const bodyRect = document.body.getBoundingClientRect()
+    const x = rect.left - element.scrollLeft - bodyRect.left
+    const y = rect.top - element.scrollTop - bodyRect.top
+    return { x, y }
+  }
+
   static createPointer (event) {
     const touch = ('changedTouches' in event ? event.changedTouches[0] : null)
     const pageX = (touch || event).pageX
     const pageY = (touch || event).pageY
-    const el = event.target
-    const elRect = el.getBoundingClientRect()
-    const bodyRect = document.body.getBoundingClientRect()
-    const offsetLeft = elRect.left - el.scrollLeft - bodyRect.left
-    const offsetTop = elRect.top - el.scrollTop - bodyRect.top
-    const offsetX = pageX - offsetLeft
-    const offsetY = pageY - offsetTop
+    const offset = Draggable.getOffset(event.target)
+    const offsetX = pageX - offset.x
+    const offsetY = pageY - offset.y
     return { pageX, pageY, offsetX, offsetY }
   }
 
