@@ -107,9 +107,11 @@ class Draggable {
 
   start (event) {
     const p = Draggable.createPointer(event)
+    const x = p.offsetX
+    const y = p.offsetY
     this.startPageX = p.pageX
     this.startPageY = p.pageY
-    this.onstart.call(null, p.offsetX, p.offsetY, event)
+    this.onstart.call(null, { x, y, event })
     document.addEventListener(TYPE_MOVE, this['on' + TYPE_MOVE])
     document.addEventListener(TYPE_END, this['on' + TYPE_END])
   }
@@ -118,13 +120,13 @@ class Draggable {
     const p = Draggable.createPointer(event)
     const dx = p.pageX - this.startPageX
     const dy = p.pageY - this.startPageY
-    this.onmove.call(null, dx, dy, event)
+    this.onmove.call(null, { dx, dy, event })
   }
 
   end (event) {
     document.removeEventListener(TYPE_MOVE, this['on' + TYPE_MOVE])
     document.removeEventListener(TYPE_END, this['on' + TYPE_END])
-    this.onend.call(null, event)
+    this.onend.call(null, { event })
   }
 }
 
@@ -157,28 +159,28 @@ class Editable {
     this.element.addEventListener('keydown', this.onkeydown.bind(this))
   }
 
-  onstart (x, y, event) {
-    if (this.target && this.target !== event.target) {
+  onstart (context) {
+    if (this.target && this.target !== context.event.target) {
       this.target.classList.remove('_webedit_selected')
     }
-    if (!event.target.classList.contains('_webedit_target')) {
+    if (!context.event.target.classList.contains('_webedit_target')) {
       this.target = null
       return
     }
-    event.preventDefault()
-    this.target = event.target
+    context.event.preventDefault()
+    this.target = context.event.target
     this.target.classList.add('_webedit_selected')
     const style = window.getComputedStyle(this.target)
     this.context.left = parseInt(style.left, 10)
     this.context.top = parseInt(style.top, 10)
     this.context.width = parseInt(style.width, 10)
-    this.context.isLeftEdge = (x >= 0 && x <= 12)
-    this.context.isRightEdge = (this.context.width - 12 <= x && x <= this.context.width)
+    this.context.isLeftEdge = (context.x >= 0 && context.x <= 12)
+    this.context.isRightEdge = (this.context.width - 12 <= context.x && context.x <= this.context.width)
     this.target.style.borderLeftColor = (this.context.isLeftEdge ? 'orange' : '')
     this.target.style.borderRightColor = (this.context.isRightEdge ? 'orange' : '')
   }
 
-  onmove (dx, dy, event) {
+  onmove (context) {
     if (!this.target) {
       return
     }
@@ -186,13 +188,13 @@ class Editable {
     let dtop = 0
     let dwidth = 0
     if (this.context.isRightEdge) {
-      dwidth += dx
+      dwidth += context.dx
     } else if (this.context.isLeftEdge) {
-      dleft += dx
-      dwidth -= dx
+      dleft += context.dx
+      dwidth -= context.dx
     } else {
-      dleft += dx
-      dtop += dy
+      dleft += context.dx
+      dtop += context.dy
     }
     if (this.requestID) {
       window.cancelAnimationFrame(this.requestID)
@@ -205,7 +207,7 @@ class Editable {
     })
   }
 
-  onend (event) {
+  onend () {
     if (!this.target) {
       return
     }
