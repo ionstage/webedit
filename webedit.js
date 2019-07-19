@@ -69,43 +69,6 @@ class Draggable {
   }
 
   onmousedown (event) {
-    this.start(event)
-  }
-
-  onmousemove (event) {
-    this.move(event)
-  }
-
-  onmouseup (event) {
-    this.end(event)
-  }
-
-  ontouchstart (event) {
-    if (event.touches.length > 1) {
-      return
-    }
-    const touch = event.changedTouches[0]
-    this.identifier = touch.identifier
-    this.start(event)
-  }
-
-  ontouchmove (event) {
-    const touch = event.changedTouches[0]
-    if (touch.identifier !== this.identifier) {
-      return
-    }
-    this.move(event)
-  }
-
-  ontouchend (event) {
-    const touch = event.changedTouches[0]
-    if (touch.identifier !== this.identifier) {
-      return
-    }
-    this.end(event)
-  }
-
-  start (event) {
     const p = Draggable.createPointer(event)
     const x = p.offsetX
     const y = p.offsetY
@@ -116,14 +79,51 @@ class Draggable {
     document.addEventListener(TYPE_END, this['on' + TYPE_END])
   }
 
-  move (event) {
+  onmousemove (event) {
     const p = Draggable.createPointer(event)
     const dx = p.pageX - this.startPageX
     const dy = p.pageY - this.startPageY
     this.onmove.call(null, { dx, dy, event })
   }
 
-  end (event) {
+  onmouseup (event) {
+    document.removeEventListener(TYPE_MOVE, this['on' + TYPE_MOVE])
+    document.removeEventListener(TYPE_END, this['on' + TYPE_END])
+    this.onend.call(null, { event })
+  }
+
+  ontouchstart (event) {
+    if (event.touches.length > 1) {
+      return
+    }
+    const touch = event.changedTouches[0]
+    const p = Draggable.createPointer(event)
+    const x = p.offsetX
+    const y = p.offsetY
+    this.identifier = touch.identifier
+    this.startPageX = p.pageX
+    this.startPageY = p.pageY
+    this.onstart.call(null, { x, y, event })
+    document.addEventListener(TYPE_MOVE, this['on' + TYPE_MOVE])
+    document.addEventListener(TYPE_END, this['on' + TYPE_END])
+  }
+
+  ontouchmove (event) {
+    const touch = event.changedTouches[0]
+    if (touch.identifier !== this.identifier) {
+      return
+    }
+    const p = Draggable.createPointer(event)
+    const dx = p.pageX - this.startPageX
+    const dy = p.pageY - this.startPageY
+    this.onmove.call(null, { dx, dy, event })
+  }
+
+  ontouchend (event) {
+    const touch = event.changedTouches[0]
+    if (touch.identifier !== this.identifier) {
+      return
+    }
     document.removeEventListener(TYPE_MOVE, this['on' + TYPE_MOVE])
     document.removeEventListener(TYPE_END, this['on' + TYPE_END])
     this.onend.call(null, { event })
