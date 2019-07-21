@@ -18,11 +18,6 @@ const CSS_RULES = [
   }`
 ]
 
-const SUPPORTS_TOUCH = ('ontouchstart' in window || navigator.maxTouchPoints > 0)
-const TYPE_START = (SUPPORTS_TOUCH ? 'touchstart' : 'mousedown')
-const TYPE_MOVE = (SUPPORTS_TOUCH ? 'touchmove' : 'mousemove')
-const TYPE_END = (SUPPORTS_TOUCH ? 'touchend' : 'mouseup')
-
 const insertCSSRules = (rules) => {
   const style = document.createElement('style')
   document.head.appendChild(style)
@@ -65,7 +60,9 @@ class Draggable {
   }
 
   enable () {
-    this.element.addEventListener(TYPE_START, this['on' + TYPE_START], { passive: false })
+    const supportsTouch = ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+    const type = (supportsTouch ? 'touchstart' : 'mousedown')
+    this.element.addEventListener(type, this['on' + type], { passive: false })
   }
 
   onmousedown (event) {
@@ -75,8 +72,8 @@ class Draggable {
     this.startPageX = p.pageX
     this.startPageY = p.pageY
     this.onstart.call(null, { x, y, event })
-    document.addEventListener(TYPE_MOVE, this['on' + TYPE_MOVE])
-    document.addEventListener(TYPE_END, this['on' + TYPE_END])
+    document.addEventListener('mousemove', this.onmousemove)
+    document.addEventListener('mouseup', this.onmouseup)
   }
 
   onmousemove (event) {
@@ -87,8 +84,8 @@ class Draggable {
   }
 
   onmouseup (event) {
-    document.removeEventListener(TYPE_MOVE, this['on' + TYPE_MOVE])
-    document.removeEventListener(TYPE_END, this['on' + TYPE_END])
+    document.removeEventListener('mousemove', this.onmousemove)
+    document.removeEventListener('mouseup', this.onmouseup)
     this.onend.call(null, { event })
   }
 
@@ -104,8 +101,8 @@ class Draggable {
     this.startPageX = p.pageX
     this.startPageY = p.pageY
     this.onstart.call(null, { x, y, event })
-    document.addEventListener(TYPE_MOVE, this['on' + TYPE_MOVE])
-    document.addEventListener(TYPE_END, this['on' + TYPE_END])
+    document.addEventListener('touchmove', this.ontouchmove)
+    document.addEventListener('touchend', this.ontouchend)
   }
 
   ontouchmove (event) {
@@ -124,8 +121,8 @@ class Draggable {
     if (touch.identifier !== this.identifier) {
       return
     }
-    document.removeEventListener(TYPE_MOVE, this['on' + TYPE_MOVE])
-    document.removeEventListener(TYPE_END, this['on' + TYPE_END])
+    document.removeEventListener('touchmove', this.ontouchmove)
+    document.removeEventListener('touchend', this.ontouchend)
     this.onend.call(null, { event })
   }
 }
