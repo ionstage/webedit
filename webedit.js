@@ -208,24 +208,20 @@ class Editable {
       return
     }
     const style = window.getComputedStyle(this.target)
-    switch (event.which) {
-      // left
-      case 37:
+    switch (event.key) {
+      case 'ArrowLeft':
         event.preventDefault()
         this.target.style.left = parseInt(style.left, 10) - 1 + 'px'
         break
-      // up
-      case 38:
+      case 'ArrowUp':
         event.preventDefault()
         this.target.style.top = parseInt(style.top, 10) - 1 + 'px'
         break
-      // right
-      case 39:
+      case 'ArrowRight':
         event.preventDefault()
         this.target.style.left = parseInt(style.left, 10) + 1 + 'px'
         break
-      // down
-      case 40:
+      case 'ArrowDown':
         event.preventDefault()
         this.target.style.top = parseInt(style.top, 10) + 1 + 'px'
         break
