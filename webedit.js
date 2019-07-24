@@ -123,7 +123,7 @@ class Editable {
     this.element = element
     this.draggable = new Draggable({ element, onstart, onmove, onend })
     this.requestID = 0
-    this.target = null
+    this.targetElement = null
     this.context = {}
   }
 
@@ -145,28 +145,28 @@ class Editable {
   }
 
   onstart (context) {
-    if (this.target && this.target !== context.event.target) {
-      this.target.classList.remove('_webedit_selected')
+    if (this.targetElement && this.targetElement !== context.event.target) {
+      this.targetElement.classList.remove('_webedit_selected')
     }
     if (!context.event.target.classList.contains('_webedit_target')) {
-      this.target = null
+      this.targetElement = null
       return
     }
     context.event.preventDefault()
-    this.target = context.event.target
-    this.target.classList.add('_webedit_selected')
-    const style = window.getComputedStyle(this.target)
+    this.targetElement = context.event.target
+    this.targetElement.classList.add('_webedit_selected')
+    const style = window.getComputedStyle(this.targetElement)
     this.context.left = parseInt(style.left, 10)
     this.context.top = parseInt(style.top, 10)
     this.context.width = parseInt(style.width, 10)
     this.context.isLeftEdge = (context.x >= 0 && context.x <= 12)
     this.context.isRightEdge = (this.context.width - 12 <= context.x && context.x <= this.context.width)
-    this.target.style.borderLeftColor = (this.context.isLeftEdge ? 'orange' : '')
-    this.target.style.borderRightColor = (this.context.isRightEdge ? 'orange' : '')
+    this.targetElement.style.borderLeftColor = (this.context.isLeftEdge ? 'orange' : '')
+    this.targetElement.style.borderRightColor = (this.context.isRightEdge ? 'orange' : '')
   }
 
   onmove (context) {
-    if (!this.target) {
+    if (!this.targetElement) {
       return
     }
     let dleft = 0
@@ -185,45 +185,45 @@ class Editable {
       window.cancelAnimationFrame(this.requestID)
     }
     this.requestID = window.requestAnimationFrame(() => {
-      this.target.style.left = (this.context.left + dleft) + 'px'
-      this.target.style.top = (this.context.top + dtop) + 'px'
-      this.target.style.width = Math.max(this.context.width + dwidth, 24) + 'px'
+      this.targetElement.style.left = (this.context.left + dleft) + 'px'
+      this.targetElement.style.top = (this.context.top + dtop) + 'px'
+      this.targetElement.style.width = Math.max(this.context.width + dwidth, 24) + 'px'
       this.requestID = 0
     })
   }
 
   onend () {
-    if (!this.target) {
+    if (!this.targetElement) {
       return
     }
     window.requestAnimationFrame(() => {
-      this.target.style.borderLeftColor = ''
-      this.target.style.borderRightColor = ''
-      Editable.printElement(this.target)
+      this.targetElement.style.borderLeftColor = ''
+      this.targetElement.style.borderRightColor = ''
+      Editable.printElement(this.targetElement)
     })
   }
 
   onkeydown (event) {
-    if (!this.target) {
+    if (!this.targetElement) {
       return
     }
-    const style = window.getComputedStyle(this.target)
+    const style = window.getComputedStyle(this.targetElement)
     switch (event.key) {
       case 'ArrowLeft':
         event.preventDefault()
-        this.target.style.left = parseInt(style.left, 10) - 1 + 'px'
+        this.targetElement.style.left = parseInt(style.left, 10) - 1 + 'px'
         break
       case 'ArrowUp':
         event.preventDefault()
-        this.target.style.top = parseInt(style.top, 10) - 1 + 'px'
+        this.targetElement.style.top = parseInt(style.top, 10) - 1 + 'px'
         break
       case 'ArrowRight':
         event.preventDefault()
-        this.target.style.left = parseInt(style.left, 10) + 1 + 'px'
+        this.targetElement.style.left = parseInt(style.left, 10) + 1 + 'px'
         break
       case 'ArrowDown':
         event.preventDefault()
-        this.target.style.top = parseInt(style.top, 10) + 1 + 'px'
+        this.targetElement.style.top = parseInt(style.top, 10) + 1 + 'px'
         break
     }
   }
