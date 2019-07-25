@@ -116,12 +116,13 @@ class Draggable {
 }
 
 class Editable {
-  constructor (element) {
-    const onstart = this.onstart.bind(this)
-    const onmove = this.onmove.bind(this)
-    const onend = this.onend.bind(this)
-    this.element = element
-    this.draggable = new Draggable({ element, onstart, onmove, onend })
+  constructor () {
+    this.draggable = new Draggable({
+      element: document.body,
+      onstart: this.onstart.bind(this),
+      onmove: this.onmove.bind(this),
+      onend: this.onend.bind(this)
+    })
     this.requestID = 0
     this.targetElement = null
     this.context = {}
@@ -141,7 +142,7 @@ class Editable {
 
   enable () {
     this.draggable.enable()
-    this.element.addEventListener('keydown', this.onkeydown.bind(this))
+    document.body.addEventListener('keydown', this.onkeydown.bind(this))
   }
 
   onstart (context) {
@@ -232,7 +233,7 @@ class Editable {
 const main = () => {
   insertCSSRules(CSS_RULES)
   document.body.classList.add('_webedit')
-  new Editable(document.body).enable()
+  new Editable().enable()
 }
 
 main()
