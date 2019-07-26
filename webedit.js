@@ -128,21 +128,21 @@ class Editable {
     this.context = {}
   }
 
-  static printElement (element) {
-    const style = window.getComputedStyle(element)
+  enable () {
+    this.draggable.enable()
+    document.body.addEventListener('keydown', this.onkeydown.bind(this))
+  }
+
+  printTarget () {
+    const style = window.getComputedStyle(this.targetElement)
     const output = [
-      `#${element.id} {`,
+      `#${this.targetElement.id} {`,
       `  left: ${parseInt(style.left, 10)}px;`,
       `  top: ${parseInt(style.top, 10)}px;`,
       `  width: ${parseInt(style.width, 10)}px;`,
       '}\n\n'
     ].join('\n')
     console.log(output)
-  }
-
-  enable () {
-    this.draggable.enable()
-    document.body.addEventListener('keydown', this.onkeydown.bind(this))
   }
 
   onstart (context) {
@@ -200,7 +200,7 @@ class Editable {
     window.requestAnimationFrame(() => {
       this.targetElement.style.borderLeftColor = ''
       this.targetElement.style.borderRightColor = ''
-      Editable.printElement(this.targetElement)
+      this.printTarget()
     })
   }
 
