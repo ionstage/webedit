@@ -115,6 +115,8 @@ class Draggable {
   }
 }
 
+class KeyInput {}
+
 class Editable {
   constructor () {
     this.draggable = new Draggable({
@@ -123,6 +125,7 @@ class Editable {
       onmove: this.onmove.bind(this),
       onend: this.onend.bind(this)
     })
+    this.keyInput = new KeyInput()
     this.requestID = 0
     this.targetElement = null
     this.context = {}
