@@ -115,7 +115,13 @@ class Draggable {
   }
 }
 
-class KeyInput {}
+class KeyInput {
+  enable () {
+    document.body.addEventListener('keydown', this.onkeydown.bind(this))
+  }
+
+  onkeydown () {}
+}
 
 class Editable {
   constructor () {
