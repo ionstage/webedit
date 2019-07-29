@@ -116,11 +116,20 @@ class Draggable {
 }
 
 class KeyInput {
+  constructor (listeners) {
+    this.listeners = listeners
+  }
+
   enable () {
     document.body.addEventListener('keydown', this.onkeydown.bind(this))
   }
 
-  onkeydown () {}
+  onkeydown (event) {
+    const listener = this.listeners[event.key]
+    if (listener) {
+      listener(event)
+    }
+  }
 }
 
 class Editable {
