@@ -127,7 +127,7 @@ class KeyInput {
   onkeydown (event) {
     const listener = this.listeners[event.key]
     if (listener) {
-      listener(event)
+      listener({ event })
     }
   }
 }
