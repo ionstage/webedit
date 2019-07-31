@@ -116,8 +116,8 @@ class Draggable {
 }
 
 class KeyInput {
-  constructor (listeners) {
-    this.listeners = listeners
+  constructor (handlers) {
+    this.handlers = handlers
   }
 
   enable () {
@@ -125,9 +125,9 @@ class KeyInput {
   }
 
   onkeydown (event) {
-    const listener = this.listeners[event.key]
-    if (listener) {
-      listener({ event })
+    const handler = this.handlers[event.key]
+    if (handler) {
+      handler({ event })
     }
   }
 }
