@@ -140,7 +140,12 @@ class Editable {
       onmove: this.onmove.bind(this),
       onend: this.onend.bind(this)
     })
-    this.keyInput = new KeyInput()
+    this.keyInput = new KeyInput({
+      ArrowLeft: this.onkeyinput.bind(this, 'left', -1),
+      ArrowUp: this.onkeyinput.bind(this, 'top', -1),
+      ArrowRight: this.onkeyinput.bind(this, 'left', 1),
+      ArrowDown: this.onkeyinput.bind(this, 'top', 1)
+    })
     this.requestID = 0
     this.targetElement = null
     this.context = {}
@@ -148,7 +153,7 @@ class Editable {
 
   enable () {
     this.draggable.enable()
-    document.body.addEventListener('keydown', this.onkeydown.bind(this))
+    this.keyInput.enable()
   }
 
   printTarget () {
@@ -222,29 +227,13 @@ class Editable {
     })
   }
 
-  onkeydown (event) {
+  onkeyinput (name, diff, context) {
     if (!this.targetElement) {
       return
     }
     const style = window.getComputedStyle(this.targetElement)
-    switch (event.key) {
-      case 'ArrowLeft':
-        event.preventDefault()
-        this.targetElement.style.left = parseInt(style.left, 10) - 1 + 'px'
-        break
-      case 'ArrowUp':
-        event.preventDefault()
-        this.targetElement.style.top = parseInt(style.top, 10) - 1 + 'px'
-        break
-      case 'ArrowRight':
-        event.preventDefault()
-        this.targetElement.style.left = parseInt(style.left, 10) + 1 + 'px'
-        break
-      case 'ArrowDown':
-        event.preventDefault()
-        this.targetElement.style.top = parseInt(style.top, 10) + 1 + 'px'
-        break
-    }
+    context.event.preventDefault()
+    this.targetElement.style[name] = parseInt(style[name], 10) + diff + 'px'
   }
 }
 
