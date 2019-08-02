@@ -132,7 +132,7 @@ class KeyInput {
   }
 }
 
-class Editable {
+class WebEdit {
   constructor () {
     this.draggable = new Draggable({
       element: document.body,
@@ -240,7 +240,7 @@ class Editable {
 const main = () => {
   insertCSSRules(CSS_RULES)
   document.body.classList.add('_webedit')
-  new Editable().enable()
+  new WebEdit().enable()
 }
 
 main()
