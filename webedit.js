@@ -4,26 +4,6 @@
  * Released under the MIT License.
  */
 
-const CSS_RULES = [
-  `._webedit ._webedit_target {
-    border: 1px solid cyan;
-    margin: -1px;
-    pointer-events: auto;
-  }`,
-  `._webedit ._webedit_selected {
-    border-color: red;
-  }`,
-  `._webedit :not(._webedit_target) {
-    pointer-events: none;
-  }`
-]
-
-const insertCSSRules = (rules) => {
-  const style = document.createElement('style')
-  document.head.appendChild(style)
-  rules.forEach((rule, index) => style.sheet.insertRule(rule, index))
-}
-
 class Draggable {
   constructor (props) {
     this.element = props.element
@@ -151,7 +131,31 @@ class WebEdit {
     this.context = {}
   }
 
+  static get CSS_RULES () {
+    return [
+      `._webedit ._webedit_target {
+        border: 1px solid cyan;
+        margin: -1px;
+        pointer-events: auto;
+      }`,
+      `._webedit ._webedit_selected {
+        border-color: red;
+      }`,
+      `._webedit :not(._webedit_target) {
+        pointer-events: none;
+      }`
+    ]
+  }
+
+  static insertCSSRules (rules) {
+    const style = document.createElement('style')
+    document.head.appendChild(style)
+    rules.forEach((rule, index) => style.sheet.insertRule(rule, index))
+  }
+
   enable () {
+    WebEdit.insertCSSRules(WebEdit.CSS_RULES)
+    document.body.classList.add('_webedit')
     this.draggable.enable()
     this.keyInput.enable()
   }
@@ -238,8 +242,6 @@ class WebEdit {
 }
 
 const main = () => {
-  insertCSSRules(CSS_RULES)
-  document.body.classList.add('_webedit')
   new WebEdit().enable()
 }
 
