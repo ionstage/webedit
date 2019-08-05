@@ -97,6 +97,8 @@ class Draggable {
 
 class Movable {}
 
+class Sizable {}
+
 class KeyInput {
   constructor (handlers) {
     this.handlers = handlers
