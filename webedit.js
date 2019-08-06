@@ -205,13 +205,13 @@ class WebEdit {
     let dtop = 0
     let dwidth = 0
     if (this.context.isRightEdge) {
-      dwidth += context.dx
+      dwidth = context.dx
     } else if (this.context.isLeftEdge) {
-      dleft += context.dx
-      dwidth -= context.dx
+      dleft = context.dx
+      dwidth = -context.dx
     } else {
-      dleft += context.dx
-      dtop += context.dy
+      dleft = context.dx
+      dtop = context.dy
     }
     if (this.requestID) {
       window.cancelAnimationFrame(this.requestID)
