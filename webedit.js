@@ -241,8 +241,8 @@ class WebEdit {
     if (!this.targetElement) {
       return
     }
-    const style = window.getComputedStyle(this.targetElement)
     context.event.preventDefault()
+    const style = window.getComputedStyle(this.targetElement)
     this.targetElement.style[name] = parseInt(style[name], 10) + diff + 'px'
   }
 }
