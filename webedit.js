@@ -112,6 +112,8 @@ class KeyInput {
   }
 }
 
+class Renderer {}
+
 class WebEdit {
   constructor () {
     this.draggable = new Draggable({
