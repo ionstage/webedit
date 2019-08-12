@@ -115,7 +115,8 @@ class KeyInput {
 class Renderer {}
 
 class WebEdit {
-  constructor () {
+  constructor (props) {
+    this.renderer = props.renderer
     this.draggable = new Draggable({
       element: document.body,
       onstart: this.onstart.bind(this),
@@ -244,7 +245,7 @@ class WebEdit {
 }
 
 const main = () => {
-  new WebEdit().enable()
+  new WebEdit({ renderer: new Renderer() }).enable()
 }
 
 main()
