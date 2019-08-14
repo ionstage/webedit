@@ -112,7 +112,11 @@ class KeyInput {
   }
 }
 
-class Renderer {}
+class Renderer {
+  addClass (element, className) {
+    element.classList.add(className)
+  }
+}
 
 class WebEdit {
   constructor (props) {
