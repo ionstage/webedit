@@ -116,6 +116,7 @@ class Renderer {
   addClass (element, className) {
     element.classList.add(className)
   }
+
   removeClass (element, className) {
     element.classList.remove(className)
   }
