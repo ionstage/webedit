@@ -113,6 +113,25 @@ class KeyInput {
 }
 
 class Renderer {
+  constructor () {
+    this.items = []
+    this.requestID = 0
+  }
+
+  update (item) {
+    this.items.push(item)
+    if (this.requestID) {
+      return
+    }
+    this.requestID = window.requestAnimationFrame(() => {
+      this.items.forEach(item => {
+        this[item.func].apply(this, item.args)
+      })
+      this.items = []
+      this.requestID = 0
+    })
+  }
+
   addClass (element, className) {
     element.classList.add(className)
   }
