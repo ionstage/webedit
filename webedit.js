@@ -124,9 +124,7 @@ class Renderer {
       return
     }
     this.requestID = window.requestAnimationFrame(() => {
-      this.items.forEach(item => {
-        this[item.func].apply(this, item.args)
-      })
+      this.items.forEach(item => this[item.func].apply(this, item.args))
       this.items = []
       this.requestID = 0
     })
