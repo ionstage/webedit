@@ -124,17 +124,17 @@ class Renderer {
       return
     }
     this.requestID = window.requestAnimationFrame(() => {
-      this.items.forEach(item => this[item.func].apply(this, item.args))
+      this.items.forEach(item => this['_' + item.func].apply(this, item.args))
       this.items = []
       this.requestID = 0
     })
   }
 
-  addClass (element, className) {
+  _addClass (element, className) {
     element.classList.add(className)
   }
 
-  removeClass (element, className) {
+  _removeClass (element, className) {
     element.classList.remove(className)
   }
 }
