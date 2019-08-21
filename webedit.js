@@ -139,14 +139,6 @@ class Renderer {
       this.requestID = 0
     })
   }
-
-  _addClass (element, className) {
-    element.classList.add(className)
-  }
-
-  _removeClass (element, className) {
-    element.classList.remove(className)
-  }
 }
 
 class WebEdit {
