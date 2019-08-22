@@ -114,27 +114,24 @@ class KeyInput {
 
 class Renderer {
   constructor () {
-    this.keys = []
-    this.funcMap = new Map()
+    this.funcs = []
     this.argsMap = new Map()
     this.requestID = 0
   }
 
-  update (key, func, ...args) {
-    const index = this.keys.indexOf(key)
+  update (func, ...args) {
+    const index = this.funcs.indexOf(func)
     if (index !== -1) {
-      this.keys.splice(index, 1)
+      this.funcs.splice(index, 1)
     }
-    this.keys.push(key)
-    this.funcMap.set(key, func)
-    this.argsMap.set(key, args)
+    this.funcs.push(func)
+    this.argsMap.set(func, args)
     if (this.requestID) {
       return
     }
     this.requestID = window.requestAnimationFrame(() => {
-      this.keys.forEach(key => this.funcMap.get(key).apply(null, this.argsMap.get(key)))
-      this.keys = []
-      this.funcMap.clear()
+      this.funcs.forEach(func => func.apply(null, this.argsMap.get(func)))
+      this.funcs = []
       this.argsMap.clear()
       this.requestID = 0
     })
