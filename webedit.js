@@ -117,6 +117,7 @@ class Renderer {
     this.funcs = []
     this.argsMap = new Map()
     this.requestID = 0
+    this.onupdate = this.onupdate.bind(this)
   }
 
   update (func, ...args) {
@@ -129,12 +130,14 @@ class Renderer {
     if (this.requestID) {
       return
     }
-    this.requestID = window.requestAnimationFrame(() => {
-      this.funcs.forEach(func => func.apply(null, this.argsMap.get(func)))
-      this.funcs = []
-      this.argsMap.clear()
-      this.requestID = 0
-    })
+    this.requestID = window.requestAnimationFrame(this.onupdate)
+  }
+
+  onupdate () {
+    this.funcs.forEach(func => func.apply(null, this.argsMap.get(func)))
+    this.funcs = []
+    this.argsMap.clear()
+    this.requestID = 0
   }
 }
 
