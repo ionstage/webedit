@@ -156,7 +156,6 @@ class WebEdit {
       ArrowRight: this.onkeyinput.bind(this, 'left', 1),
       ArrowDown: this.onkeyinput.bind(this, 'top', 1)
     })
-    this.requestID = 0
     this.targetElement = null
     this.context = {}
   }
@@ -239,15 +238,8 @@ class WebEdit {
       dleft = context.dx
       dtop = context.dy
     }
-    if (this.requestID) {
-      window.cancelAnimationFrame(this.requestID)
-    }
-    this.requestID = window.requestAnimationFrame(() => {
-      this.targetElement.style.left = (this.context.left + dleft) + 'px'
-      this.targetElement.style.top = (this.context.top + dtop) + 'px'
-      this.targetElement.style.width = Math.max(this.context.width + dwidth, 24) + 'px'
-      this.requestID = 0
-    })
+    this.renderer.update(this.onupdate, this.targetElement,
+      this.context.left + dleft, this.context.top + dtop, Math.max(this.context.width + dwidth, 24))
   }
 
   onend () {
@@ -268,6 +260,12 @@ class WebEdit {
     context.event.preventDefault()
     const style = window.getComputedStyle(this.targetElement)
     this.targetElement.style[name] = parseInt(style[name], 10) + diff + 'px'
+  }
+
+  onupdate (element, left, top, width) {
+    element.style.left = left + 'px'
+    element.style.top = top + 'px'
+    element.style.width = width + 'px'
   }
 }
 
