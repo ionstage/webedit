@@ -114,19 +114,13 @@ class KeyInput {
 
 class Renderer {
   constructor () {
-    this.funcs = []
-    this.argsMap = new Map()
+    this.map = new Map()
     this.requestID = 0
     this.onupdate = this.onupdate.bind(this)
   }
 
   update (func, ...args) {
-    const index = this.funcs.indexOf(func)
-    if (index !== -1) {
-      this.funcs.splice(index, 1)
-    }
-    this.funcs.push(func)
-    this.argsMap.set(func, args)
+    this.map.set(func, args)
     if (this.requestID) {
       return
     }
@@ -134,9 +128,8 @@ class Renderer {
   }
 
   onupdate () {
-    this.funcs.forEach(func => func.apply(null, this.argsMap.get(func)))
-    this.funcs = []
-    this.argsMap.clear()
+    this.map.forEach((args, func) => func.apply(null, args))
+    this.map.clear()
     this.requestID = 0
   }
 }
