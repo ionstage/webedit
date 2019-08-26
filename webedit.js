@@ -239,7 +239,7 @@ class WebEdit {
     if (!this.targetElement) {
       return
     }
-    window.requestAnimationFrame(() => {
+    this.renderer.update(() => {
       this.targetElement.style.borderLeftColor = ''
       this.targetElement.style.borderRightColor = ''
       this.printTarget()
