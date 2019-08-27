@@ -4,6 +4,28 @@
  * Released under the MIT License.
  */
 
+class Renderer {
+  constructor () {
+    this.map = new Map()
+    this.requestID = 0
+    this.onupdate = this.onupdate.bind(this)
+  }
+
+  update (func, ...args) {
+    this.map.set(func, args)
+    if (this.requestID) {
+      return
+    }
+    this.requestID = window.requestAnimationFrame(this.onupdate)
+  }
+
+  onupdate () {
+    this.map.forEach((args, func) => func.apply(null, args))
+    this.map.clear()
+    this.requestID = 0
+  }
+}
+
 class Draggable {
   constructor (props) {
     this.element = props.element
@@ -109,28 +131,6 @@ class KeyInput {
     if (handler) {
       handler({ event })
     }
-  }
-}
-
-class Renderer {
-  constructor () {
-    this.map = new Map()
-    this.requestID = 0
-    this.onupdate = this.onupdate.bind(this)
-  }
-
-  update (func, ...args) {
-    this.map.set(func, args)
-    if (this.requestID) {
-      return
-    }
-    this.requestID = window.requestAnimationFrame(this.onupdate)
-  }
-
-  onupdate () {
-    this.map.forEach((args, func) => func.apply(null, args))
-    this.map.clear()
-    this.requestID = 0
   }
 }
 
