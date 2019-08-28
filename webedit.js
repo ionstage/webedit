@@ -134,9 +134,16 @@ class KeyInput {
   }
 }
 
+class DragHandler {
+  constructor (props) {
+    this.renderer = props.renderer
+  }
+}
+
 class WebEdit {
   constructor (props) {
     this.renderer = props.renderer
+    this.dragHandler = new DragHandler({ renderer: this.renderer })
     this.draggable = new Draggable({
       element: document.body,
       onstart: this.onstart.bind(this),
