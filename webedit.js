@@ -137,6 +137,78 @@ class KeyInput {
 class DragHandler {
   constructor (props) {
     this.renderer = props.renderer
+    this.targetElement = null
+    this.context = {}
+  }
+
+  start (context) {
+    if (this.targetElement && this.targetElement !== context.event.target) {
+      this.targetElement.classList.remove('_webedit_selected')
+    }
+    if (!context.event.target.classList.contains('_webedit_target')) {
+      this.targetElement = null
+      return
+    }
+    context.event.preventDefault()
+    this.targetElement = context.event.target
+    this.targetElement.classList.add('_webedit_selected')
+    const style = window.getComputedStyle(this.targetElement)
+    this.context.left = parseInt(style.left, 10)
+    this.context.top = parseInt(style.top, 10)
+    this.context.width = parseInt(style.width, 10)
+    this.context.isLeftEdge = (context.x >= 0 && context.x <= 12)
+    this.context.isRightEdge = (this.context.width - 12 <= context.x && context.x <= this.context.width)
+    this.targetElement.style.borderLeftColor = (this.context.isLeftEdge ? 'orange' : '')
+    this.targetElement.style.borderRightColor = (this.context.isRightEdge ? 'orange' : '')
+  }
+
+  move (context) {
+    if (!this.targetElement) {
+      return
+    }
+    let dleft = 0
+    let dtop = 0
+    let dwidth = 0
+    if (this.context.isRightEdge) {
+      dwidth = context.dx
+    } else if (this.context.isLeftEdge) {
+      dleft = context.dx
+      dwidth = -context.dx
+    } else {
+      dleft = context.dx
+      dtop = context.dy
+    }
+    this.renderer.update(this.update, this.targetElement,
+      this.context.left + dleft, this.context.top + dtop, Math.max(this.context.width + dwidth, 24))
+  }
+
+  end () {
+    if (!this.targetElement) {
+      return
+    }
+    this.renderer.update(() => {
+      this.targetElement.style.borderLeftColor = ''
+      this.targetElement.style.borderRightColor = ''
+      this.printTarget()
+    })
+  }
+
+  printTarget () {
+    const style = window.getComputedStyle(this.targetElement)
+    const output = [
+      `#${this.targetElement.id} {`,
+      `  left: ${parseInt(style.left, 10)}px;`,
+      `  top: ${parseInt(style.top, 10)}px;`,
+      `  width: ${parseInt(style.width, 10)}px;`,
+      '}\n\n'
+    ].join('\n')
+    console.log(output)
+  }
+
+  update (element, left, top, width) {
+    element.style.left = left + 'px'
+    element.style.top = top + 'px'
+    element.style.width = width + 'px'
   }
 }
 
@@ -146,9 +218,9 @@ class WebEdit {
     this.dragHandler = new DragHandler({ renderer: this.renderer })
     this.draggable = new Draggable({
       element: document.body,
-      onstart: this.onstart.bind(this),
-      onmove: this.onmove.bind(this),
-      onend: this.onend.bind(this)
+      onstart: this.dragHandler.start.bind(this.dragHandler),
+      onmove: this.dragHandler.move.bind(this.dragHandler),
+      onend: this.dragHandler.end.bind(this.dragHandler)
     })
     this.keyInput = new KeyInput({
       ArrowLeft: this.onkeyinput.bind(this, 'left', -1),
@@ -157,7 +229,6 @@ class WebEdit {
       ArrowDown: this.onkeyinput.bind(this, 'top', 1)
     })
     this.targetElement = null
-    this.context = {}
   }
 
   static get CSS_RULES () {
@@ -189,70 +260,6 @@ class WebEdit {
     this.keyInput.enable()
   }
 
-  printTarget () {
-    const style = window.getComputedStyle(this.targetElement)
-    const output = [
-      `#${this.targetElement.id} {`,
-      `  left: ${parseInt(style.left, 10)}px;`,
-      `  top: ${parseInt(style.top, 10)}px;`,
-      `  width: ${parseInt(style.width, 10)}px;`,
-      '}\n\n'
-    ].join('\n')
-    console.log(output)
-  }
-
-  onstart (context) {
-    if (this.targetElement && this.targetElement !== context.event.target) {
-      this.targetElement.classList.remove('_webedit_selected')
-    }
-    if (!context.event.target.classList.contains('_webedit_target')) {
-      this.targetElement = null
-      return
-    }
-    context.event.preventDefault()
-    this.targetElement = context.event.target
-    this.targetElement.classList.add('_webedit_selected')
-    const style = window.getComputedStyle(this.targetElement)
-    this.context.left = parseInt(style.left, 10)
-    this.context.top = parseInt(style.top, 10)
-    this.context.width = parseInt(style.width, 10)
-    this.context.isLeftEdge = (context.x >= 0 && context.x <= 12)
-    this.context.isRightEdge = (this.context.width - 12 <= context.x && context.x <= this.context.width)
-    this.targetElement.style.borderLeftColor = (this.context.isLeftEdge ? 'orange' : '')
-    this.targetElement.style.borderRightColor = (this.context.isRightEdge ? 'orange' : '')
-  }
-
-  onmove (context) {
-    if (!this.targetElement) {
-      return
-    }
-    let dleft = 0
-    let dtop = 0
-    let dwidth = 0
-    if (this.context.isRightEdge) {
-      dwidth = context.dx
-    } else if (this.context.isLeftEdge) {
-      dleft = context.dx
-      dwidth = -context.dx
-    } else {
-      dleft = context.dx
-      dtop = context.dy
-    }
-    this.renderer.update(this.onupdate, this.targetElement,
-      this.context.left + dleft, this.context.top + dtop, Math.max(this.context.width + dwidth, 24))
-  }
-
-  onend () {
-    if (!this.targetElement) {
-      return
-    }
-    this.renderer.update(() => {
-      this.targetElement.style.borderLeftColor = ''
-      this.targetElement.style.borderRightColor = ''
-      this.printTarget()
-    })
-  }
-
   onkeyinput (name, diff, context) {
     if (!this.targetElement) {
       return
@@ -260,12 +267,6 @@ class WebEdit {
     context.event.preventDefault()
     const style = window.getComputedStyle(this.targetElement)
     this.targetElement.style[name] = parseInt(style[name], 10) + diff + 'px'
-  }
-
-  onupdate (element, left, top, width) {
-    element.style.left = left + 'px'
-    element.style.top = top + 'px'
-    element.style.width = width + 'px'
   }
 }
 
