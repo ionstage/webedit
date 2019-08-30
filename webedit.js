@@ -138,7 +138,11 @@ class DragHandler {
   constructor (props) {
     this.renderer = props.renderer
     this.targetElement = null
-    this.context = {}
+    this.left = 0
+    this.top = 0
+    this.width = 0
+    this.isLeftEdge = false
+    this.isRightEdge = false
   }
 
   start (context) {
@@ -153,13 +157,13 @@ class DragHandler {
     this.targetElement = context.event.target
     this.targetElement.classList.add('_webedit_selected')
     const style = window.getComputedStyle(this.targetElement)
-    this.context.left = parseInt(style.left, 10)
-    this.context.top = parseInt(style.top, 10)
-    this.context.width = parseInt(style.width, 10)
-    this.context.isLeftEdge = (context.x >= 0 && context.x <= 12)
-    this.context.isRightEdge = (this.context.width - 12 <= context.x && context.x <= this.context.width)
-    this.targetElement.style.borderLeftColor = (this.context.isLeftEdge ? 'orange' : '')
-    this.targetElement.style.borderRightColor = (this.context.isRightEdge ? 'orange' : '')
+    this.left = parseInt(style.left, 10)
+    this.top = parseInt(style.top, 10)
+    this.width = parseInt(style.width, 10)
+    this.isLeftEdge = (context.x >= 0 && context.x <= 12)
+    this.isRightEdge = (this.width - 12 <= context.x && context.x <= this.width)
+    this.targetElement.style.borderLeftColor = (this.isLeftEdge ? 'orange' : '')
+    this.targetElement.style.borderRightColor = (this.isRightEdge ? 'orange' : '')
   }
 
   move (context) {
@@ -169,9 +173,9 @@ class DragHandler {
     let dleft = 0
     let dtop = 0
     let dwidth = 0
-    if (this.context.isRightEdge) {
+    if (this.isRightEdge) {
       dwidth = context.dx
-    } else if (this.context.isLeftEdge) {
+    } else if (this.isLeftEdge) {
       dleft = context.dx
       dwidth = -context.dx
     } else {
@@ -179,7 +183,7 @@ class DragHandler {
       dtop = context.dy
     }
     this.renderer.update(this.update, this.targetElement,
-      this.context.left + dleft, this.context.top + dtop, Math.max(this.context.width + dwidth, 24))
+      this.left + dleft, this.top + dtop, Math.max(this.width + dwidth, 24))
   }
 
   end () {
