@@ -137,6 +137,7 @@ class KeyInput {
 class DragHandler {
   constructor (props) {
     this.renderer = props.renderer
+    this.onselect = props.onselect
     this.targetElement = null
     this.left = 0
     this.top = 0
@@ -151,10 +152,12 @@ class DragHandler {
     }
     if (!context.event.target.classList.contains('_webedit_target')) {
       this.targetElement = null
+      this.onselect(null)
       return
     }
     context.event.preventDefault()
     this.targetElement = context.event.target
+    this.onselect(this.targetElement)
     this.targetElement.classList.add('_webedit_selected')
     const style = window.getComputedStyle(this.targetElement)
     this.left = parseInt(style.left, 10)
@@ -219,7 +222,10 @@ class DragHandler {
 class WebEdit {
   constructor (props) {
     this.renderer = props.renderer
-    this.dragHandler = new DragHandler({ renderer: this.renderer })
+    this.dragHandler = new DragHandler({
+      renderer: this.renderer,
+      onselect: this.onselect.bind(this)
+    })
     this.draggable = new Draggable({
       element: document.body,
       onstart: this.dragHandler.start.bind(this.dragHandler),
@@ -232,7 +238,7 @@ class WebEdit {
       ArrowRight: this.onkeyinput.bind(this, 'left', 1),
       ArrowDown: this.onkeyinput.bind(this, 'top', 1)
     })
-    this.targetElement = null
+    this.selectedElement = null
   }
 
   static get CSS_RULES () {
@@ -264,13 +270,17 @@ class WebEdit {
     this.keyInput.enable()
   }
 
+  onselect (element) {
+    this.selectedElement = element
+  }
+
   onkeyinput (name, diff, context) {
-    if (!this.targetElement) {
+    if (!this.selectedElement) {
       return
     }
     context.event.preventDefault()
-    const style = window.getComputedStyle(this.targetElement)
-    this.targetElement.style[name] = parseInt(style[name], 10) + diff + 'px'
+    const style = window.getComputedStyle(this.selectedElement)
+    this.selectedElement.style[name] = parseInt(style[name], 10) + diff + 'px'
   }
 }
 
