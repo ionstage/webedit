@@ -173,20 +173,19 @@ class DragHandler {
     if (!this.targetElement) {
       return
     }
-    let dleft = 0
-    let dtop = 0
-    let dwidth = 0
+    let left = this.left
+    let top = this.top
+    let width = this.width
     if (this.isRightEdge) {
-      dwidth = context.dx
+      width += context.dx
     } else if (this.isLeftEdge) {
-      dleft = context.dx
-      dwidth = -context.dx
+      left += context.dx
+      width -= context.dx
     } else {
-      dleft = context.dx
-      dtop = context.dy
+      left += context.dx
+      top += context.dy
     }
-    this.renderer.update(this.update, this.targetElement,
-      this.left + dleft, this.top + dtop, Math.max(this.width + dwidth, 24))
+    this.renderer.update(this.update, this.targetElement, left, top, Math.max(width, 24))
   }
 
   end () {
