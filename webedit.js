@@ -165,8 +165,7 @@ class DragHandler {
     this.width = parseInt(style.width, 10)
     this.isLeftEdge = (context.x >= 0 && context.x <= 12)
     this.isRightEdge = (this.width - 12 <= context.x && context.x <= this.width)
-    this.targetElement.style.borderLeftColor = (this.isLeftEdge ? 'orange' : '')
-    this.targetElement.style.borderRightColor = (this.isRightEdge ? 'orange' : '')
+    this.targetElement.style.borderColor = (this.isLeftEdge || this.isRightEdge ? 'orange' : '')
   }
 
   move (context) {
@@ -193,8 +192,7 @@ class DragHandler {
       return
     }
     this.renderer.update(() => {
-      this.targetElement.style.borderLeftColor = ''
-      this.targetElement.style.borderRightColor = ''
+      this.targetElement.style.borderColor = ''
       this.printTarget()
     })
   }
