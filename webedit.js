@@ -152,12 +152,12 @@ class DragHandler {
     }
     if (!context.event.target.classList.contains('_webedit_target')) {
       this.targetElement = null
-      this.onselect(null)
+      this.onselect.call(null, null)
       return
     }
     context.event.preventDefault()
     this.targetElement = context.event.target
-    this.onselect(this.targetElement)
+    this.onselect.call(null, this.targetElement)
     this.targetElement.classList.add('_webedit_selected')
     const style = window.getComputedStyle(this.targetElement)
     this.left = parseInt(style.left, 10)
