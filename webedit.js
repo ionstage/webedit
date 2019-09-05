@@ -117,6 +117,8 @@ class Draggable {
   }
 }
 
+class Selectable {}
+
 class KeyInput {
   constructor (handlers) {
     this.handlers = handlers
