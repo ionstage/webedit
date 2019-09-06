@@ -117,7 +117,7 @@ class Draggable {
   }
 }
 
-class Selectable {}
+class Selection {}
 
 class KeyInput {
   constructor (handlers) {
