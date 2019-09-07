@@ -117,7 +117,23 @@ class Draggable {
   }
 }
 
-class Selection {}
+class Selection {
+  constructor () {
+    this.elements = []
+  }
+
+  add (element) {
+    this.elements.push(element)
+  }
+
+  clear () {
+    this.elements = []
+  }
+
+  forEach (callback) {
+    this.elements.forEach(callback)
+  }
+}
 
 class KeyInput {
   constructor (handlers) {
@@ -221,6 +237,7 @@ class DragHandler {
 class WebEdit {
   constructor (props) {
     this.renderer = props.renderer
+    this.selection = new Selection()
     this.dragHandler = new DragHandler({
       renderer: this.renderer,
       onselect: this.onselect.bind(this)
@@ -237,7 +254,6 @@ class WebEdit {
       ArrowRight: this.onkeyinput.bind(this, 'left', 1),
       ArrowDown: this.onkeyinput.bind(this, 'top', 1)
     })
-    this.selectedElement = null
   }
 
   static get CSS_RULES () {
@@ -270,16 +286,16 @@ class WebEdit {
   }
 
   onselect (element) {
-    this.selectedElement = element
+    this.selection.clear()
+    this.selection.add(element)
   }
 
   onkeyinput (name, diff, context) {
-    if (!this.selectedElement) {
-      return
-    }
     context.event.preventDefault()
-    const style = window.getComputedStyle(this.selectedElement)
-    this.selectedElement.style[name] = parseInt(style[name], 10) + diff + 'px'
+    this.selection.forEach(element => {
+      const style = window.getComputedStyle(element)
+      element.style[name] = parseInt(style[name], 10) + diff + 'px'
+    })
   }
 }
 
