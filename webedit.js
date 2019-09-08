@@ -118,7 +118,8 @@ class Draggable {
 }
 
 class Selection {
-  constructor () {
+  constructor (props) {
+    this.renderer = props.renderer
     this.elements = []
   }
 
@@ -237,7 +238,7 @@ class DragHandler {
 class WebEdit {
   constructor (props) {
     this.renderer = props.renderer
-    this.selection = new Selection()
+    this.selection = new Selection({ renderer: this.renderer })
     this.dragHandler = new DragHandler({
       renderer: this.renderer,
       onselect: this.onselect.bind(this)
