@@ -156,7 +156,7 @@ class KeyInput {
 class DragHandler {
   constructor (props) {
     this.renderer = props.renderer
-    this.onselect = props.onselect
+    this.selection = props.selection
     this.targetElement = null
     this.left = 0
     this.top = 0
@@ -171,12 +171,13 @@ class DragHandler {
     }
     if (!context.event.target.classList.contains('_webedit_target')) {
       this.targetElement = null
-      this.onselect.call(null, null)
+      this.selection.clear()
       return
     }
     context.event.preventDefault()
     this.targetElement = context.event.target
-    this.onselect.call(null, this.targetElement)
+    this.selection.clear()
+    this.selection.add(this.targetElement)
     this.targetElement.classList.add('_webedit_selected')
     const style = window.getComputedStyle(this.targetElement)
     this.left = parseInt(style.left, 10)
@@ -241,7 +242,7 @@ class WebEdit {
     this.selection = new Selection({ renderer: this.renderer })
     this.dragHandler = new DragHandler({
       renderer: this.renderer,
-      onselect: this.onselect.bind(this)
+      selection: this.selection
     })
     this.draggable = new Draggable({
       element: document.body,
@@ -284,11 +285,6 @@ class WebEdit {
     document.body.classList.add('_webedit')
     this.draggable.enable()
     this.keyInput.enable()
-  }
-
-  onselect (element) {
-    this.selection.clear()
-    this.selection.add(element)
   }
 
   onkeyinput (name, diff, context) {
