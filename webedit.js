@@ -119,20 +119,35 @@ class Draggable {
 
 class Selection {
   constructor (props) {
+    this.className = props.className
     this.renderer = props.renderer
     this.elements = []
+    this.previousElements = []
+    this.onupdate = this.onupdate.bind(this)
+  }
+
+  get removedElements () {
+    return this.previousElements.filter(element => !this.elements.includes(element))
   }
 
   add (element) {
     this.elements.push(element)
+    this.renderer.update(this.onupdate)
   }
 
   clear () {
     this.elements = []
+    this.renderer.update(this.onupdate)
   }
 
   forEach (callback) {
     this.elements.forEach(callback)
+  }
+
+  onupdate () {
+    this.removedElements.forEach(element => element.classList.remove(this.className))
+    this.elements.forEach(element => element.classList.add(this.className))
+    this.previousElements = this.elements.slice()
   }
 }
 
@@ -166,9 +181,6 @@ class DragHandler {
   }
 
   start (context) {
-    if (this.targetElement && this.targetElement !== context.event.target) {
-      this.targetElement.classList.remove('_webedit_selected')
-    }
     if (!context.event.target.classList.contains('_webedit_target')) {
       this.targetElement = null
       this.selection.clear()
@@ -178,7 +190,6 @@ class DragHandler {
     this.targetElement = context.event.target
     this.selection.clear()
     this.selection.add(this.targetElement)
-    this.targetElement.classList.add('_webedit_selected')
     const style = window.getComputedStyle(this.targetElement)
     this.left = parseInt(style.left, 10)
     this.top = parseInt(style.top, 10)
@@ -239,7 +250,10 @@ class DragHandler {
 class WebEdit {
   constructor (props) {
     this.renderer = props.renderer
-    this.selection = new Selection({ renderer: this.renderer })
+    this.selection = new Selection({
+      className: '_webedit_selected',
+      renderer: this.renderer
+    })
     this.dragHandler = new DragHandler({
       renderer: this.renderer,
       selection: this.selection
