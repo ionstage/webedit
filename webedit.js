@@ -11,8 +11,8 @@ class Renderer {
     this.onupdate = this.onupdate.bind(this)
   }
 
-  update (func, ...args) {
-    this.map.set(func, args)
+  update (callback, ...args) {
+    this.map.set(callback, args)
     if (this.requestID) {
       return
     }
@@ -20,7 +20,7 @@ class Renderer {
   }
 
   onupdate () {
-    this.map.forEach((args, func) => func.apply(null, args))
+    this.map.forEach((args, callback) => callback.apply(null, args))
     this.map.clear()
     this.requestID = 0
   }
