@@ -247,8 +247,8 @@ class DragHandler {
 }
 
 class WebEdit {
-  constructor (props) {
-    this.renderer = props.renderer
+  constructor () {
+    this.renderer = new Renderer()
     this.selection = new Selection({
       className: '_webedit_selected',
       renderer: this.renderer
@@ -310,7 +310,7 @@ class WebEdit {
 }
 
 const main = () => {
-  new WebEdit({ renderer: new Renderer() }).enable()
+  new WebEdit().enable()
 }
 
 main()
