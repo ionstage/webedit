@@ -126,6 +126,10 @@ class Selection {
     this.onupdate = this.onupdate.bind(this)
   }
 
+  get size () {
+    return this.elements.length
+  }
+
   get removedElements () {
     return this.previousElements.filter(element => !this.elements.includes(element))
   }
