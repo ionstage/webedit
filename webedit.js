@@ -140,6 +140,9 @@ class Selection {
   }
 
   clear () {
+    if (this.elements.length === 0) {
+      return
+    }
     this.elements = []
     this.renderer.update(this.onupdate)
   }
