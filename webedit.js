@@ -120,6 +120,7 @@ class Draggable {
 class Selection {
   constructor (props) {
     this.className = props.className
+    this.filter = props.filter
     this.renderer = props.renderer
     this.elements = []
     this.previousElements = []
@@ -135,6 +136,9 @@ class Selection {
   }
 
   add (element) {
+    if (!this.filter.call(null, element)) {
+      return
+    }
     this.elements.push(element)
     this.renderer.update(this.onupdate)
   }
@@ -258,6 +262,7 @@ class WebEdit {
     this.renderer = new Renderer()
     this.selection = new Selection({
       className: '_webedit_selected',
+      filter: element => element.classList.contains('_webedit_target'),
       renderer: this.renderer
     })
     this.dragHandler = new DragHandler({
