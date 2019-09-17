@@ -131,6 +131,10 @@ class Selection {
     return this.elements.length
   }
 
+  get addedElements () {
+    return this.elements.filter(element => !this.previousElements.includes(element))
+  }
+
   get removedElements () {
     return this.previousElements.filter(element => !this.elements.includes(element))
   }
@@ -157,7 +161,7 @@ class Selection {
 
   onupdate () {
     this.removedElements.forEach(element => element.classList.remove(this.className))
-    this.elements.forEach(element => element.classList.add(this.className))
+    this.addedElements.forEach(element => element.classList.add(this.className))
     this.previousElements = this.elements.slice()
   }
 }
