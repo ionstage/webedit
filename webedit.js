@@ -140,6 +140,9 @@ class Selection {
   }
 
   add (element) {
+    if (this.elements.includes(element)) {
+      return
+    }
     if (!this.filter.call(null, element)) {
       return
     }
