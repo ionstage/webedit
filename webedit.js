@@ -200,13 +200,12 @@ class DragHandler {
 
   start (context) {
     this.selection.clear()
-    if (!context.event.target.classList.contains('_webedit_target')) {
-      this.targetElement = null
+    this.selection.add(context.event.target)
+    this.targetElement = this.selection.elements[0] || null
+    if (!this.targetElement) {
       return
     }
     context.event.preventDefault()
-    this.targetElement = context.event.target
-    this.selection.add(this.targetElement)
     const style = window.getComputedStyle(this.targetElement)
     this.left = parseInt(style.left, 10)
     this.top = parseInt(style.top, 10)
