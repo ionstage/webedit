@@ -159,7 +159,7 @@ class Selection {
   }
 
   forEach (callback) {
-    this.elements.forEach(callback)
+    this.elements.forEach(callback, this)
   }
 
   onupdate () {
