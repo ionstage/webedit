@@ -162,6 +162,10 @@ class Selection {
     this.elements.forEach(callback, this)
   }
 
+  map (callback) {
+    return this.elements.map(callback, this)
+  }
+
   onupdate () {
     this.removedElements.forEach(element => element.classList.remove(this.className))
     this.addedElements.forEach(element => element.classList.add(this.className))
