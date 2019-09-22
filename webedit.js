@@ -190,14 +190,20 @@ class KeyInput {
   }
 }
 
+class DragTarget {
+  constructor (props) {
+    this.element = props.element
+    this.offsetLeft = props.offsetLeft
+    this.offsetTop = props.offsetTop
+    this.offsetWidth = props.offsetWidth
+  }
+}
+
 class DragHandler {
   constructor (props) {
     this.renderer = props.renderer
     this.selection = props.selection
-    this.targetElement = null
-    this.left = 0
-    this.top = 0
-    this.width = 0
+    this.target = null
     this.isLeftEdge = false
     this.isRightEdge = false
   }
@@ -205,27 +211,29 @@ class DragHandler {
   start (context) {
     this.selection.clear()
     this.selection.add(context.event.target)
-    this.targetElement = this.selection.elements[0] || null
-    if (!this.targetElement) {
+    const element = this.selection.elements[0] || null
+    if (!element) {
+      this.target = null
       return
     }
     context.event.preventDefault()
-    const style = window.getComputedStyle(this.targetElement)
-    this.left = parseInt(style.left, 10)
-    this.top = parseInt(style.top, 10)
-    this.width = parseInt(style.width, 10)
+    const style = window.getComputedStyle(element)
+    const offsetLeft = parseInt(style.left, 10)
+    const offsetTop = parseInt(style.top, 10)
+    const offsetWidth = parseInt(style.width, 10)
+    this.target = new DragTarget({ element, offsetLeft, offsetTop, offsetWidth })
     this.isLeftEdge = (context.x >= 0 && context.x <= 12)
-    this.isRightEdge = (this.width - 12 <= context.x && context.x <= this.width)
-    this.targetElement.style.borderColor = (this.isLeftEdge || this.isRightEdge ? 'orange' : '')
+    this.isRightEdge = (offsetWidth - 12 <= context.x && context.x <= offsetWidth)
+    this.target.element.style.borderColor = (this.isLeftEdge || this.isRightEdge ? 'orange' : '')
   }
 
   move (context) {
-    if (!this.targetElement) {
+    if (!this.target) {
       return
     }
-    let left = this.left
-    let top = this.top
-    let width = this.width
+    let left = this.target.offsetLeft
+    let top = this.target.offsetTop
+    let width = this.target.offsetWidth
     if (this.isRightEdge) {
       width += context.dx
     } else if (this.isLeftEdge) {
@@ -235,23 +243,23 @@ class DragHandler {
       left += context.dx
       top += context.dy
     }
-    this.renderer.update(this.update, this.targetElement, left, top, Math.max(width, 24))
+    this.renderer.update(this.update, this.target.element, left, top, Math.max(width, 24))
   }
 
   end () {
-    if (!this.targetElement) {
+    if (!this.target) {
       return
     }
     this.renderer.update(() => {
-      this.targetElement.style.borderColor = ''
+      this.target.element.style.borderColor = ''
       this.printTarget()
     })
   }
 
   printTarget () {
-    const style = window.getComputedStyle(this.targetElement)
+    const style = window.getComputedStyle(this.target.element)
     const output = [
-      `#${this.targetElement.id} {`,
+      `#${this.target.element.id} {`,
       `  left: ${parseInt(style.left, 10)}px;`,
       `  top: ${parseInt(style.top, 10)}px;`,
       `  width: ${parseInt(style.width, 10)}px;`,
