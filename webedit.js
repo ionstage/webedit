@@ -193,6 +193,17 @@ class DragTarget {
     this.offsetTop = props.offsetTop
     this.offsetWidth = props.offsetWidth
   }
+
+  cssLog () {
+    const style = window.getComputedStyle(this.element)
+    return [
+      `#${this.element.id} {`,
+      `  left: ${parseInt(style.left, 10)}px;`,
+      `  top: ${parseInt(style.top, 10)}px;`,
+      `  width: ${parseInt(style.width, 10)}px;`,
+      '}\n'
+    ].join('\n')
+  }
 }
 
 class DragHandler {
@@ -236,20 +247,8 @@ class DragHandler {
     }
     this.renderer.update(() => {
       this.target.element.style.borderColor = ''
-      this.printTarget()
+      console.log(this.target.cssLog())
     })
-  }
-
-  printTarget () {
-    const style = window.getComputedStyle(this.target.element)
-    const output = [
-      `#${this.target.element.id} {`,
-      `  left: ${parseInt(style.left, 10)}px;`,
-      `  top: ${parseInt(style.top, 10)}px;`,
-      `  width: ${parseInt(style.width, 10)}px;`,
-      '}\n\n'
-    ].join('\n')
-    console.log(output)
   }
 
   onmove (target, dx, dy, isLeftEdge, isRightEdge) {
