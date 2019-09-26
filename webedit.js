@@ -245,10 +245,7 @@ class DragHandler {
     if (!this.target) {
       return
     }
-    this.renderer.update(() => {
-      this.target.element.style.borderColor = ''
-      console.log(this.target.cssLog())
-    })
+    this.renderer.update(this.onend, this.target)
   }
 
   onmove (target, dx, dy, isLeftEdge, isRightEdge) {
@@ -267,6 +264,11 @@ class DragHandler {
     target.element.style.left = left + 'px'
     target.element.style.top = top + 'px'
     target.element.style.width = Math.max(width, 24) + 'px'
+  }
+
+  onend (target) {
+    target.element.style.borderColor = ''
+    console.log(target.cssLog())
   }
 }
 
