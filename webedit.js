@@ -242,39 +242,43 @@ class DragHandler {
     if (!this.target) {
       return
     }
-    this.renderer.update(this.onmove, this.target, context.dx, context.dy, this.isLeftEdge, this.isRightEdge)
+    this.renderer.update(this.onmove, [this.target], context.dx, context.dy, this.isLeftEdge, this.isRightEdge)
   }
 
   end () {
     if (!this.target) {
       return
     }
-    this.renderer.update(this.onend, this.target)
+    this.renderer.update(this.onend, [this.target])
   }
 
-  onmove (target, dx, dy, isLeftEdge, isRightEdge) {
-    let left = target.offsetLeft
-    let top = target.offsetTop
-    let width = target.offsetWidth
-    if (isRightEdge) {
-      width += dx
-    } else if (isLeftEdge) {
-      left += dx
-      width -= dx
-    } else {
-      left += dx
-      top += dy
+  onmove (targets, dx, dy, isLeftEdge, isRightEdge) {
+    for (let target of targets) {
+      let left = target.offsetLeft
+      let top = target.offsetTop
+      let width = target.offsetWidth
+      if (isRightEdge) {
+        width += dx
+      } else if (isLeftEdge) {
+        left += dx
+        width -= dx
+      } else {
+        left += dx
+        top += dy
+      }
+      target.css({
+        left: left + 'px',
+        top: top + 'px',
+        width: Math.max(width, 24) + 'px'
+      })
     }
-    target.css({
-      left: left + 'px',
-      top: top + 'px',
-      width: Math.max(width, 24) + 'px'
-    })
   }
 
-  onend (target) {
-    target.css({ borderColor: '' })
-    console.log(target.cssLog())
+  onend (targets) {
+    for (let target of targets) {
+      target.css({ borderColor: '' })
+      console.log(target.cssLog())
+    }
   }
 }
 
