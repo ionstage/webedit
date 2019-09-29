@@ -214,7 +214,7 @@ class DragHandler {
   constructor (props) {
     this.renderer = props.renderer
     this.selection = props.selection
-    this.target = null
+    this.targets = []
     this.isLeftEdge = false
     this.isRightEdge = false
   }
@@ -224,7 +224,7 @@ class DragHandler {
     this.selection.add(context.event.target)
     const element = this.selection.elements[0] || null
     if (!element) {
-      this.target = null
+      this.targets = []
       return
     }
     context.event.preventDefault()
@@ -232,24 +232,26 @@ class DragHandler {
     const offsetLeft = parseInt(style.left, 10)
     const offsetTop = parseInt(style.top, 10)
     const offsetWidth = parseInt(style.width, 10)
-    this.target = new DragTarget({ element, offsetLeft, offsetTop, offsetWidth })
+    this.targets = [new DragTarget({ element, offsetLeft, offsetTop, offsetWidth })]
     this.isLeftEdge = (context.x >= 0 && context.x <= 12)
     this.isRightEdge = (offsetWidth - 12 <= context.x && context.x <= offsetWidth)
-    this.target.css({ borderColor: (this.isLeftEdge || this.isRightEdge ? 'orange' : '') })
+    for (let target of this.targets) {
+      target.css({ borderColor: (this.isLeftEdge || this.isRightEdge ? 'orange' : '') })
+    }
   }
 
   move (context) {
-    if (!this.target) {
+    if (this.targets.length === 0) {
       return
     }
-    this.renderer.update(this.onmove, [this.target], context.dx, context.dy, this.isLeftEdge, this.isRightEdge)
+    this.renderer.update(this.onmove, this.targets, context.dx, context.dy, this.isLeftEdge, this.isRightEdge)
   }
 
   end () {
-    if (!this.target) {
+    if (this.targets.length === 0) {
       return
     }
-    this.renderer.update(this.onend, [this.target])
+    this.renderer.update(this.onend, this.targets)
   }
 
   onmove (targets, dx, dy, isLeftEdge, isRightEdge) {
