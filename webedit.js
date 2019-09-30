@@ -235,9 +235,7 @@ class DragHandler {
     this.targets = [new DragTarget({ element, offsetLeft, offsetTop, offsetWidth })]
     this.isLeftEdge = (context.x >= 0 && context.x <= 12)
     this.isRightEdge = (offsetWidth - 12 <= context.x && context.x <= offsetWidth)
-    for (let target of this.targets) {
-      target.css({ borderColor: (this.isLeftEdge || this.isRightEdge ? 'orange' : '') })
-    }
+    this.renderer.update(this.onstart, this.targets, this.isLeftEdge, this.isRightEdge)
   }
 
   move (context) {
@@ -252,6 +250,12 @@ class DragHandler {
       return
     }
     this.renderer.update(this.onend, this.targets)
+  }
+
+  onstart (targets, isLeftEdge, isRightEdge) {
+    for (let target of targets) {
+      target.css({ borderColor: (isLeftEdge || isRightEdge ? 'orange' : '') })
+    }
   }
 
   onmove (targets, dx, dy, isLeftEdge, isRightEdge) {
