@@ -222,19 +222,20 @@ class DragHandler {
   start (context) {
     this.selection.clear()
     this.selection.add(context.event.target)
-    const element = this.selection.elements[0] || null
-    if (!element) {
-      this.targets = []
+    this.targets = this.selection.map(element => {
+      const style = window.getComputedStyle(element)
+      const offsetLeft = parseInt(style.left, 10)
+      const offsetTop = parseInt(style.top, 10)
+      const offsetWidth = parseInt(style.width, 10)
+      return new DragTarget({ element, offsetLeft, offsetTop, offsetWidth })
+    })
+    if (this.targets.length === 0) {
       return
     }
     context.event.preventDefault()
-    const style = window.getComputedStyle(element)
-    const offsetLeft = parseInt(style.left, 10)
-    const offsetTop = parseInt(style.top, 10)
-    const offsetWidth = parseInt(style.width, 10)
-    this.targets = [new DragTarget({ element, offsetLeft, offsetTop, offsetWidth })]
     this.isLeftEdge = (context.x >= 0 && context.x <= 12)
-    this.isRightEdge = (offsetWidth - 12 <= context.x && context.x <= offsetWidth)
+    const width = this.targets[0].offsetWidth
+    this.isRightEdge = (width - 12 <= context.x && context.x <= width)
     this.renderer.update(this.onstart, this.targets, this.isLeftEdge, this.isRightEdge)
   }
 
