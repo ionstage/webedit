@@ -210,47 +210,35 @@ class DragTarget {
   }
 }
 
-class DragHandler {
+class DragProxy {
   constructor (props) {
     this.renderer = props.renderer
-    this.selection = props.selection
-    this.targets = []
     this.isLeftEdge = false
     this.isRightEdge = false
   }
 
-  start (context) {
-    this.selection.clear()
-    this.selection.add(context.event.target)
-    this.targets = this.selection.map(element => {
-      const style = window.getComputedStyle(element)
-      const offsetLeft = parseInt(style.left, 10)
-      const offsetTop = parseInt(style.top, 10)
-      const offsetWidth = parseInt(style.width, 10)
-      return new DragTarget({ element, offsetLeft, offsetTop, offsetWidth })
-    })
-    if (this.targets.length === 0) {
+  start (targets, x) {
+    if (targets.length === 0) {
       return
     }
-    context.event.preventDefault()
-    this.isLeftEdge = (context.x >= 0 && context.x <= 12)
-    const width = this.targets[0].offsetWidth
-    this.isRightEdge = (width - 12 <= context.x && context.x <= width)
-    this.renderer.update(this.onstart, this.targets, this.isLeftEdge, this.isRightEdge)
+    this.isLeftEdge = (x >= 0 && x <= 12)
+    const width = targets[0].offsetWidth
+    this.isRightEdge = (width - 12 <= x && x <= width)
+    this.renderer.update(this.onstart, targets, this.isLeftEdge, this.isRightEdge)
   }
 
-  move (context) {
-    if (this.targets.length === 0) {
+  move (targets, dx, dy) {
+    if (targets.length === 0) {
       return
     }
-    this.renderer.update(this.onmove, this.targets, context.dx, context.dy, this.isLeftEdge, this.isRightEdge)
+    this.renderer.update(this.onmove, targets, dx, dy, this.isLeftEdge, this.isRightEdge)
   }
 
-  end () {
-    if (this.targets.length === 0) {
+  end (targets) {
+    if (targets.length === 0) {
       return
     }
-    this.renderer.update(this.onend, this.targets)
+    this.renderer.update(this.onend, targets)
   }
 
   onstart (targets, isLeftEdge, isRightEdge) {
@@ -289,6 +277,38 @@ class DragHandler {
   }
 }
 
+class DragHandler {
+  constructor (props) {
+    this.selection = props.selection
+    this.targets = []
+    this.proxy = new DragProxy({ renderer: props.renderer })
+  }
+
+  start (context) {
+    this.selection.clear()
+    this.selection.add(context.event.target)
+    this.targets = this.selection.map(element => {
+      const style = window.getComputedStyle(element)
+      const offsetLeft = parseInt(style.left, 10)
+      const offsetTop = parseInt(style.top, 10)
+      const offsetWidth = parseInt(style.width, 10)
+      return new DragTarget({ element, offsetLeft, offsetTop, offsetWidth })
+    })
+    if (this.targets.length > 0) {
+      context.event.preventDefault()
+    }
+    this.proxy.start(this.targets, context.x)
+  }
+
+  move (context) {
+    this.proxy.move(this.targets, context.dx, context.dy)
+  }
+
+  end () {
+    this.proxy.end(this.targets)
+  }
+}
+
 class WebEdit {
   constructor () {
     this.renderer = new Renderer()
@@ -298,8 +318,8 @@ class WebEdit {
       renderer: this.renderer
     })
     this.dragHandler = new DragHandler({
-      renderer: this.renderer,
-      selection: this.selection
+      selection: this.selection,
+      renderer: this.renderer
     })
     this.draggable = new Draggable({
       element: document.body,
