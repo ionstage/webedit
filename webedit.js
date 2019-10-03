@@ -210,7 +210,7 @@ class DragTarget {
   }
 }
 
-class DragProxy {
+class DragStrategy {
   constructor (props) {
     this.renderer = props.renderer
     this.isLeftEdge = false
@@ -281,7 +281,7 @@ class DragHandler {
   constructor (props) {
     this.selection = props.selection
     this.targets = []
-    this.proxy = new DragProxy({ renderer: props.renderer })
+    this.strategy = new DragStrategy({ renderer: props.renderer })
   }
 
   start (context) {
@@ -297,15 +297,15 @@ class DragHandler {
     if (this.targets.length > 0) {
       context.event.preventDefault()
     }
-    this.proxy.start(this.targets, context.x)
+    this.strategy.start(this.targets, context.x)
   }
 
   move (context) {
-    this.proxy.move(this.targets, context.dx, context.dy)
+    this.strategy.move(this.targets, context.dx, context.dy)
   }
 
   end () {
-    this.proxy.end(this.targets)
+    this.strategy.end(this.targets)
   }
 }
 
