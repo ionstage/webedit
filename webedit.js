@@ -210,7 +210,7 @@ class DragTarget {
   }
 }
 
-class DragStrategy {
+class DefaultDragStrategy {
   constructor (props) {
     this.renderer = props.renderer
     this.isLeftEdge = false
@@ -277,11 +277,26 @@ class DragStrategy {
   }
 }
 
+class NoopDragStrategy {
+  start () { /* do nothing */ }
+  move () { /* do nothing */ }
+  end () { /* do nothing */ }
+}
+
 class DragHandler {
   constructor (props) {
     this.selection = props.selection
     this.targets = []
-    this.strategy = new DragStrategy({ renderer: props.renderer })
+    this.strategyMap = {
+      default: new DefaultDragStrategy({ renderer: props.renderer }),
+      noop: new NoopDragStrategy()
+    }
+    this.strategy = this.strategyMap.noop
+  }
+
+  resolveStrategy () {
+    const key = this.targets.length > 0 ? 'default' : 'noop'
+    this.strategy = this.strategyMap[key]
   }
 
   start (context) {
@@ -297,6 +312,7 @@ class DragHandler {
     if (this.targets.length > 0) {
       context.event.preventDefault()
     }
+    this.resolveStrategy()
     this.strategy.start(this.targets, context.x)
   }
 
