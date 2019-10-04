@@ -218,9 +218,6 @@ class DefaultDragStrategy {
   }
 
   start (targets, x) {
-    if (targets.length === 0) {
-      return
-    }
     this.isLeftEdge = (x >= 0 && x <= 12)
     const width = targets[0].offsetWidth
     this.isRightEdge = (width - 12 <= x && x <= width)
@@ -228,16 +225,10 @@ class DefaultDragStrategy {
   }
 
   move (targets, dx, dy) {
-    if (targets.length === 0) {
-      return
-    }
     this.renderer.update(this.onmove, targets, dx, dy, this.isLeftEdge, this.isRightEdge)
   }
 
   end (targets) {
-    if (targets.length === 0) {
-      return
-    }
     this.renderer.update(this.onend, targets)
   }
 
