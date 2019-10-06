@@ -278,16 +278,16 @@ class DragHandler {
   constructor (props) {
     this.selection = props.selection
     this.targets = []
-    this.strategyMap = {
+    this.strategies = {
       default: new DefaultDragStrategy({ renderer: props.renderer }),
       noop: new NoopDragStrategy()
     }
-    this.strategy = this.strategyMap.noop
+    this.strategy = this.strategies.noop
   }
 
   resolveStrategy () {
     const key = this.targets.length > 0 ? 'default' : 'noop'
-    this.strategy = this.strategyMap[key]
+    this.strategy = this.strategies[key]
   }
 
   start (context) {
