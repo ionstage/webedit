@@ -6,13 +6,13 @@
 
 class Renderer {
   constructor () {
-    this.map = new Map()
+    this.tasks = new Map()
     this.requestID = 0
     this.onupdate = this.onupdate.bind(this)
   }
 
   update (callback, ...args) {
-    this.map.set(callback, args)
+    this.tasks.set(callback, args)
     if (this.requestID) {
       return
     }
@@ -20,8 +20,8 @@ class Renderer {
   }
 
   onupdate () {
-    this.map.forEach((args, callback) => callback.apply(null, args))
-    this.map.clear()
+    this.tasks.forEach((args, callback) => callback.apply(null, args))
+    this.tasks.clear()
     this.requestID = 0
   }
 }
