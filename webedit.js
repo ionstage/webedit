@@ -233,8 +233,11 @@ class DefaultDragStrategy {
   }
 
   onstart (targets, isLeftEdge, isRightEdge) {
+    if (!isLeftEdge && !isRightEdge) {
+      return
+    }
     for (let target of targets) {
-      target.css({ borderColor: (isLeftEdge || isRightEdge ? 'orange' : '') })
+      target.css({ borderColor: 'orange' })
     }
   }
 
