@@ -242,24 +242,31 @@ class DefaultDragStrategy {
   }
 
   onmove (targets, dx, dy, isLeftEdge, isRightEdge) {
-    for (let target of targets) {
-      let left = target.offsetLeft
-      let top = target.offsetTop
-      let width = target.offsetWidth
-      if (isRightEdge) {
-        width += dx
-      } else if (isLeftEdge) {
-        left += dx
-        width -= dx
-      } else {
-        left += dx
-        top += dy
+    if (isRightEdge) {
+      for (let target of targets) {
+        const width = target.offsetWidth + dx
+        target.css({
+          width: Math.max(width, 24) + 'px'
+        })
       }
-      target.css({
-        left: left + 'px',
-        top: top + 'px',
-        width: Math.max(width, 24) + 'px'
-      })
+    } else if (isLeftEdge) {
+      for (let target of targets) {
+        const left = target.offsetLeft + dx
+        const width = target.offsetWidth - dx
+        target.css({
+          left: left + 'px',
+          width: Math.max(width, 24) + 'px'
+        })
+      }
+    } else {
+      for (let target of targets) {
+        const left = target.offsetLeft + dx
+        const top = target.offsetTop + dy
+        target.css({
+          left: left + 'px',
+          top: top + 'px'
+        })
+      }
     }
   }
 
