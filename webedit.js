@@ -229,7 +229,7 @@ class DefaultDragStrategy {
   }
 
   end (targets) {
-    this.renderer.update(this.onend, targets)
+    this.renderer.update(this.onend, targets, this.isLeftEdge, this.isRightEdge)
   }
 
   onstart (targets, isLeftEdge, isRightEdge) {
@@ -270,10 +270,16 @@ class DefaultDragStrategy {
     }
   }
 
-  onend (targets) {
-    for (let target of targets) {
-      target.css({ borderColor: '' })
-      console.log(target.cssLog())
+  onend (targets, isLeftEdge, isRightEdge) {
+    if (!isLeftEdge && !isRightEdge) {
+      for (let target of targets) {
+        console.log(target.cssLog())
+      }
+    } else {
+      for (let target of targets) {
+        target.css({ borderColor: '' })
+        console.log(target.cssLog())
+      }
     }
   }
 }
