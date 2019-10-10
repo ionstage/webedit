@@ -233,11 +233,10 @@ class DefaultDragStrategy {
   }
 
   onstart (targets, isLeftEdge, isRightEdge) {
-    if (!isLeftEdge && !isRightEdge) {
-      return
-    }
-    for (let target of targets) {
-      target.css({ borderColor: 'orange' })
+    if (isLeftEdge || isRightEdge) {
+      for (let target of targets) {
+        target.css({ borderColor: 'orange' })
+      }
     }
   }
 
@@ -271,13 +270,13 @@ class DefaultDragStrategy {
   }
 
   onend (targets, isLeftEdge, isRightEdge) {
-    if (!isLeftEdge && !isRightEdge) {
+    if (isLeftEdge || isRightEdge) {
       for (let target of targets) {
+        target.css({ borderColor: '' })
         console.log(target.cssLog())
       }
     } else {
       for (let target of targets) {
-        target.css({ borderColor: '' })
         console.log(target.cssLog())
       }
     }
