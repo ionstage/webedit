@@ -210,9 +210,15 @@ class DragTarget {
   }
 }
 
-class DefaultDragStrategy {
+class DragStrategy {
   constructor (props) {
     this.renderer = props.renderer
+  }
+}
+
+class DefaultDragStrategy extends DragStrategy {
+  constructor (props) {
+    super(props)
     this.isLeftEdge = false
     this.isRightEdge = false
   }
