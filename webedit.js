@@ -216,7 +216,7 @@ class DragStrategy {
   }
 }
 
-class RightEdgeDragStrategy extends DragStrategy {
+class EdgeDragStrategy extends DragStrategy {
   start (targets) {
     this.renderer.update(this.onstart, targets)
   }
@@ -235,14 +235,7 @@ class RightEdgeDragStrategy extends DragStrategy {
     }
   }
 
-  onmove (targets, dx, _dy) {
-    for (let target of targets) {
-      const width = target.offsetWidth + dx
-      target.css({
-        width: Math.max(width, 24) + 'px'
-      })
-    }
-  }
+  onmove (_targets, _dx, _dy) { /* template */ }
 
   onend (targets) {
     for (let target of targets) {
@@ -252,25 +245,18 @@ class RightEdgeDragStrategy extends DragStrategy {
   }
 }
 
-class LeftEdgeDragStrategy extends DragStrategy {
-  start (targets) {
-    this.renderer.update(this.onstart, targets)
-  }
-
-  move (targets, dx, dy) {
-    this.renderer.update(this.onmove, targets, dx, dy)
-  }
-
-  end (targets) {
-    this.renderer.update(this.onend, targets)
-  }
-
-  onstart (targets) {
+class RightEdgeDragStrategy extends EdgeDragStrategy {
+  onmove (targets, dx, _dy) {
     for (let target of targets) {
-      target.css({ borderColor: 'orange' })
+      const width = target.offsetWidth + dx
+      target.css({
+        width: Math.max(width, 24) + 'px'
+      })
     }
   }
+}
 
+class LeftEdgeDragStrategy extends EdgeDragStrategy {
   onmove (targets, dx, _dy) {
     for (let target of targets) {
       const left = target.offsetLeft + dx
@@ -279,13 +265,6 @@ class LeftEdgeDragStrategy extends DragStrategy {
         left: left + 'px',
         width: Math.max(width, 24) + 'px'
       })
-    }
-  }
-
-  onend (targets) {
-    for (let target of targets) {
-      target.css({ borderColor: '' })
-      console.log(target.cssLog())
     }
   }
 }
