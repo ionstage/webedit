@@ -214,9 +214,7 @@ class DragStrategy {
   constructor (props) {
     this.renderer = props.renderer
   }
-}
 
-class MoveDragStrategy extends DragStrategy {
   start (targets) {
     this.renderer.update(this.onstart, targets)
   }
@@ -229,6 +227,14 @@ class MoveDragStrategy extends DragStrategy {
     this.renderer.update(this.onend, targets)
   }
 
+  onstart (_targets) { /* template */ }
+
+  onmove (_targets, _dx, _dy) { /* template */ }
+
+  onend (_targets) { /* template */ }
+}
+
+class MoveDragStrategy extends DragStrategy {
   onstart (_targets) { /* do nothing */ }
 
   onmove (targets, dx, dy) {
@@ -250,18 +256,6 @@ class MoveDragStrategy extends DragStrategy {
 }
 
 class EdgeDragStrategy extends DragStrategy {
-  start (targets) {
-    this.renderer.update(this.onstart, targets)
-  }
-
-  move (targets, dx, dy) {
-    this.renderer.update(this.onmove, targets, dx, dy)
-  }
-
-  end (targets) {
-    this.renderer.update(this.onend, targets)
-  }
-
   onstart (targets) {
     for (let target of targets) {
       target.css({ borderColor: 'orange' })
