@@ -216,6 +216,39 @@ class DragStrategy {
   }
 }
 
+class MoveDragStrategy extends DragStrategy {
+  start (targets) {
+    this.renderer.update(this.onstart, targets)
+  }
+
+  move (targets, dx, dy) {
+    this.renderer.update(this.onmove, targets, dx, dy)
+  }
+
+  end (targets) {
+    this.renderer.update(this.onend, targets)
+  }
+
+  onstart (_targets) { /* do nothing */ }
+
+  onmove (targets, dx, dy) {
+    for (let target of targets) {
+      const left = target.offsetLeft + dx
+      const top = target.offsetTop + dy
+      target.css({
+        left: left + 'px',
+        top: top + 'px'
+      })
+    }
+  }
+
+  onend (targets) {
+    for (let target of targets) {
+      console.log(target.cssLog())
+    }
+  }
+}
+
 class EdgeDragStrategy extends DragStrategy {
   start (targets) {
     this.renderer.update(this.onstart, targets)
@@ -269,79 +302,6 @@ class LeftEdgeDragStrategy extends EdgeDragStrategy {
   }
 }
 
-class DefaultDragStrategy extends DragStrategy {
-  constructor (props) {
-    super(props)
-    this.isLeftEdge = false
-    this.isRightEdge = false
-  }
-
-  start (targets, x) {
-    this.isLeftEdge = (x >= 0 && x <= 12)
-    const width = targets[0].offsetWidth
-    this.isRightEdge = (width - 12 <= x && x <= width)
-    this.renderer.update(this.onstart, targets, this.isLeftEdge, this.isRightEdge)
-  }
-
-  move (targets, dx, dy) {
-    this.renderer.update(this.onmove, targets, dx, dy, this.isLeftEdge, this.isRightEdge)
-  }
-
-  end (targets) {
-    this.renderer.update(this.onend, targets, this.isLeftEdge, this.isRightEdge)
-  }
-
-  onstart (targets, isLeftEdge, isRightEdge) {
-    if (isLeftEdge || isRightEdge) {
-      for (let target of targets) {
-        target.css({ borderColor: 'orange' })
-      }
-    }
-  }
-
-  onmove (targets, dx, dy, isLeftEdge, isRightEdge) {
-    if (isRightEdge) {
-      for (let target of targets) {
-        const width = target.offsetWidth + dx
-        target.css({
-          width: Math.max(width, 24) + 'px'
-        })
-      }
-    } else if (isLeftEdge) {
-      for (let target of targets) {
-        const left = target.offsetLeft + dx
-        const width = target.offsetWidth - dx
-        target.css({
-          left: left + 'px',
-          width: Math.max(width, 24) + 'px'
-        })
-      }
-    } else {
-      for (let target of targets) {
-        const left = target.offsetLeft + dx
-        const top = target.offsetTop + dy
-        target.css({
-          left: left + 'px',
-          top: top + 'px'
-        })
-      }
-    }
-  }
-
-  onend (targets, isLeftEdge, isRightEdge) {
-    if (isLeftEdge || isRightEdge) {
-      for (let target of targets) {
-        target.css({ borderColor: '' })
-        console.log(target.cssLog())
-      }
-    } else {
-      for (let target of targets) {
-        console.log(target.cssLog())
-      }
-    }
-  }
-}
-
 class NoopDragStrategy {
   start () { /* do nothing */ }
   move () { /* do nothing */ }
@@ -353,7 +313,7 @@ class DragHandler {
     this.selection = props.selection
     this.targets = []
     this.strategies = {
-      default: new DefaultDragStrategy({ renderer: props.renderer }),
+      move: new MoveDragStrategy({ renderer: props.renderer }),
       rightEdge: new RightEdgeDragStrategy({ renderer: props.renderer }),
       leftEdge: new LeftEdgeDragStrategy({ renderer: props.renderer }),
       noop: new NoopDragStrategy()
@@ -370,7 +330,7 @@ class DragHandler {
       } else if (x >= 0 && x <= 12) {
         key = 'leftEdge'
       } else {
-        key = 'default'
+        key = 'move'
       }
     }
     this.strategy = this.strategies[key]
