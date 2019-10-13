@@ -315,19 +315,18 @@ class DragHandler {
     this.strategy = this.strategies.noop
   }
 
-  resolveStrategy (x) {
-    let key = 'noop'
-    if (this.targets.length > 0) {
-      const width = this.targets[0].offsetWidth
-      if (width - 12 <= x && x <= width) {
-        key = 'rightEdge'
-      } else if (x >= 0 && x <= 12) {
-        key = 'leftEdge'
-      } else {
-        key = 'move'
-      }
+  retrieveStrategy (x) {
+    if (this.targets.length === 0) {
+      return this.strategies.noop
     }
-    this.strategy = this.strategies[key]
+    const width = this.targets[0].offsetWidth
+    if (width - 12 <= x && x <= width) {
+      return this.strategies.rightEdge
+    }
+    if (x >= 0 && x <= 12) {
+      return this.strategies.leftEdge
+    }
+    return this.strategies.move
   }
 
   start (context) {
@@ -343,7 +342,7 @@ class DragHandler {
     if (this.targets.length > 0) {
       context.event.preventDefault()
     }
-    this.resolveStrategy(context.x)
+    this.strategy = this.retrieveStrategy(context.x)
     this.strategy.start(this.targets, context.x)
   }
 
