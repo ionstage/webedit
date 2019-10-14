@@ -235,7 +235,7 @@ class DragStrategy {
 }
 
 class MoveDragStrategy extends DragStrategy {
-  onstart (_targets) { /* do nothing */ }
+  start (_targets) { /* do nothing */ }
 
   onmove (targets, dx, dy) {
     for (let target of targets) {
