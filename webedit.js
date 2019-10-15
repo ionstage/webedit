@@ -306,6 +306,7 @@ class DragHandler {
   constructor (props) {
     this.selection = props.selection
     this.targets = []
+    this.pointedTarget = null
     this.strategies = {
       move: new MoveDragStrategy({ renderer: props.renderer }),
       rightEdge: new RightEdgeDragStrategy({ renderer: props.renderer }),
@@ -315,11 +316,15 @@ class DragHandler {
     this.strategy = this.strategies.noop
   }
 
+  findTarget (element) {
+    return this.targets.find(target => target.element === element) || null
+  }
+
   retrieveStrategy (x) {
-    if (this.targets.length === 0) {
+    if (!this.pointedTarget) {
       return this.strategies.noop
     }
-    const width = this.targets[0].offsetWidth
+    const width = this.pointedTarget.offsetWidth
     if (width - 12 <= x && x <= width) {
       return this.strategies.rightEdge
     }
@@ -339,7 +344,8 @@ class DragHandler {
       const offsetWidth = parseInt(style.width, 10)
       return new DragTarget({ element, offsetLeft, offsetTop, offsetWidth })
     })
-    if (this.targets.length > 0) {
+    this.pointedTarget = this.findTarget(context.event.target)
+    if (this.pointedTarget) {
       context.event.preventDefault()
     }
     this.strategy = this.retrieveStrategy(context.x)
