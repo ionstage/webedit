@@ -349,7 +349,7 @@ class DragHandler {
       context.event.preventDefault()
     }
     this.strategy = this.retrieveStrategy(context.x)
-    this.strategy.start(this.targets, context.x)
+    this.strategy.start(this.targets)
   }
 
   move (context) {
