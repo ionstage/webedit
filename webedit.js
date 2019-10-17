@@ -234,6 +234,14 @@ class DragStrategy {
   onend (_targets) { /* template */ }
 }
 
+class NoopDragStrategy extends DragStrategy {
+  start (_targets) { /* do nothing */ }
+
+  move (_targets, _dx, _dy) { /* do nothing */ }
+
+  end (_targets) { /* do nothing */ }
+}
+
 class MoveDragStrategy extends DragStrategy {
   start (_targets) { /* do nothing */ }
 
@@ -296,12 +304,6 @@ class LeftEdgeDragStrategy extends EdgeDragStrategy {
   }
 }
 
-class NoopDragStrategy {
-  start () { /* do nothing */ }
-  move () { /* do nothing */ }
-  end () { /* do nothing */ }
-}
-
 class DragHandler {
   constructor (props) {
     this.selection = props.selection
@@ -311,7 +313,7 @@ class DragHandler {
       move: new MoveDragStrategy({ renderer: props.renderer }),
       rightEdge: new RightEdgeDragStrategy({ renderer: props.renderer }),
       leftEdge: new LeftEdgeDragStrategy({ renderer: props.renderer }),
-      noop: new NoopDragStrategy()
+      noop: new NoopDragStrategy({ renderer: props.renderer })
     }
     this.strategy = this.strategies.noop
   }
