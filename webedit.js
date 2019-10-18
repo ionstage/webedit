@@ -294,11 +294,15 @@ class RightEdgeDragStrategy extends EdgeDragStrategy {
 class LeftEdgeDragStrategy extends EdgeDragStrategy {
   onmove (targets, dx, _dy) {
     for (let target of targets) {
+      let width = target.offsetWidth - dx
+      if (width < 24) {
+        dx = target.offsetWidth - 24
+        width = 24
+      }
       const left = target.offsetLeft + dx
-      const width = target.offsetWidth - dx
       target.css({
         left: left + 'px',
-        width: Math.max(width, 24) + 'px'
+        width: width + 'px'
       })
     }
   }
