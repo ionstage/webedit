@@ -246,7 +246,7 @@ class MoveDragStrategy extends DragStrategy {
   start (_targets) { /* do nothing */ }
 
   onmove (targets, dx, dy) {
-    for (let target of targets) {
+    for (const target of targets) {
       const left = target.offsetLeft + dx
       const top = target.offsetTop + dy
       target.css({
@@ -257,7 +257,7 @@ class MoveDragStrategy extends DragStrategy {
   }
 
   onend (targets) {
-    for (let target of targets) {
+    for (const target of targets) {
       console.log(target.cssLog())
     }
   }
@@ -265,7 +265,7 @@ class MoveDragStrategy extends DragStrategy {
 
 class EdgeDragStrategy extends DragStrategy {
   onstart (targets) {
-    for (let target of targets) {
+    for (const target of targets) {
       target.css({ borderColor: 'orange' })
     }
   }
@@ -273,7 +273,7 @@ class EdgeDragStrategy extends DragStrategy {
   onmove (_targets, _dx, _dy) { /* template */ }
 
   onend (targets) {
-    for (let target of targets) {
+    for (const target of targets) {
       target.css({ borderColor: '' })
       console.log(target.cssLog())
     }
@@ -282,7 +282,7 @@ class EdgeDragStrategy extends DragStrategy {
 
 class RightEdgeDragStrategy extends EdgeDragStrategy {
   onmove (targets, dx, _dy) {
-    for (let target of targets) {
+    for (const target of targets) {
       const width = target.offsetWidth + dx
       target.css({
         width: Math.max(width, 24) + 'px'
@@ -293,7 +293,7 @@ class RightEdgeDragStrategy extends EdgeDragStrategy {
 
 class LeftEdgeDragStrategy extends EdgeDragStrategy {
   onmove (targets, dx, _dy) {
-    for (let target of targets) {
+    for (const target of targets) {
       let width = target.offsetWidth - dx
       if (width < 24) {
         dx = target.offsetWidth - 24
