@@ -215,6 +215,11 @@ class DragStrategy {
     this.renderer = props.renderer
   }
 
+  match (_context) {
+    /* template */
+    return false
+  }
+
   start (targets) {
     this.renderer.update(this.onstart, targets)
   }
@@ -243,6 +248,10 @@ class NoopDragStrategy extends DragStrategy {
 }
 
 class MoveDragStrategy extends DragStrategy {
+  match (context) {
+    return !!context.pointedTarget
+  }
+
   start (_targets) { /* do nothing */ }
 
   onmove (targets, dx, dy) {
@@ -281,6 +290,14 @@ class EdgeDragStrategy extends DragStrategy {
 }
 
 class RightEdgeDragStrategy extends EdgeDragStrategy {
+  match (context) {
+    if (!context.pointedTarget) {
+      return false
+    }
+    const width = context.pointedTarget.offsetWidth
+    return width - 12 <= context.x && context.x <= width
+  }
+
   onmove (targets, dx, _dy) {
     for (const target of targets) {
       const width = target.offsetWidth + dx
@@ -292,6 +309,13 @@ class RightEdgeDragStrategy extends EdgeDragStrategy {
 }
 
 class LeftEdgeDragStrategy extends EdgeDragStrategy {
+  match (context) {
+    if (!context.pointedTarget) {
+      return false
+    }
+    return context.x >= 0 && context.x <= 12
+  }
+
   onmove (targets, dx, _dy) {
     for (const target of targets) {
       let width = target.offsetWidth - dx
@@ -313,31 +337,22 @@ class DragHandler {
     this.selection = props.selection
     this.targets = []
     this.pointedTarget = null
-    this.strategies = {
-      move: new MoveDragStrategy({ renderer: props.renderer }),
-      rightEdge: new RightEdgeDragStrategy({ renderer: props.renderer }),
-      leftEdge: new LeftEdgeDragStrategy({ renderer: props.renderer }),
-      noop: new NoopDragStrategy({ renderer: props.renderer })
-    }
-    this.strategy = this.strategies.noop
+    this.strategies = [
+      new RightEdgeDragStrategy({ renderer: props.renderer }),
+      new LeftEdgeDragStrategy({ renderer: props.renderer }),
+      new MoveDragStrategy({ renderer: props.renderer })
+    ]
+    this.noopStrategy = new NoopDragStrategy({ renderer: props.renderer })
+    this.strategy = this.noopStrategy
   }
 
   findTarget (element) {
     return this.targets.find(target => target.element === element) || null
   }
 
-  retrieveStrategy (x) {
-    if (!this.pointedTarget) {
-      return this.strategies.noop
-    }
-    const width = this.pointedTarget.offsetWidth
-    if (width - 12 <= x && x <= width) {
-      return this.strategies.rightEdge
-    }
-    if (x >= 0 && x <= 12) {
-      return this.strategies.leftEdge
-    }
-    return this.strategies.move
+  retrieveStrategy (pointedTarget, x) {
+    const context = { pointedTarget, x }
+    return this.strategies.find(strategy => strategy.match(context)) || this.noopStrategy
   }
 
   start (context) {
@@ -354,7 +369,7 @@ class DragHandler {
     if (this.pointedTarget) {
       context.event.preventDefault()
     }
-    this.strategy = this.retrieveStrategy(context.x)
+    this.strategy = this.retrieveStrategy(this.pointedTarget, context.x)
     this.strategy.start(this.targets)
   }
 
