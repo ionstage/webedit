@@ -215,10 +215,8 @@ class DragStrategy {
     this.renderer = props.renderer
   }
 
-  match (_context) {
-    /* template */
-    return false
-  }
+  /* template */
+  match (_context) { return false }
 
   start (targets) {
     this.renderer.update(this.onstart, targets)
@@ -232,11 +230,14 @@ class DragStrategy {
     this.renderer.update(this.onend, targets)
   }
 
-  onstart (_targets) { /* template */ }
+  /* template */
+  onstart (_targets) {}
 
-  onmove (_targets, _dx, _dy) { /* template */ }
+  /* template */
+  onmove (_targets, _dx, _dy) {}
 
-  onend (_targets) { /* template */ }
+  /* template */
+  onend (_targets) {}
 }
 
 class NoopDragStrategy extends DragStrategy {
@@ -278,8 +279,6 @@ class EdgeDragStrategy extends DragStrategy {
       target.css({ borderColor: 'orange' })
     }
   }
-
-  onmove (_targets, _dx, _dy) { /* template */ }
 
   onend (targets) {
     for (const target of targets) {
