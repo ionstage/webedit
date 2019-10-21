@@ -194,6 +194,14 @@ class DragTarget {
     this.offsetWidth = props.offsetWidth
   }
 
+  static create (element) {
+    const style = window.getComputedStyle(element)
+    const offsetLeft = parseInt(style.left, 10)
+    const offsetTop = parseInt(style.top, 10)
+    const offsetWidth = parseInt(style.width, 10)
+    return new DragTarget({ element, offsetLeft, offsetTop, offsetWidth })
+  }
+
   css (props) {
     Object.keys(props).forEach(key => (this.element.style[key] = props[key]))
   }
@@ -357,13 +365,7 @@ class DragHandler {
   start (context) {
     this.selection.clear()
     this.selection.add(context.event.target)
-    this.targets = this.selection.map(element => {
-      const style = window.getComputedStyle(element)
-      const offsetLeft = parseInt(style.left, 10)
-      const offsetTop = parseInt(style.top, 10)
-      const offsetWidth = parseInt(style.width, 10)
-      return new DragTarget({ element, offsetLeft, offsetTop, offsetWidth })
-    })
+    this.targets = this.selection.map(DragTarget.create)
     this.pointedTarget = this.findTarget(context.event.target)
     if (this.pointedTarget) {
       context.event.preventDefault()
