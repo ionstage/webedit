@@ -197,12 +197,14 @@ class DragTarget {
 
   static create (element) {
     const style = window.getComputedStyle(element)
-    const offsetLeft = parseInt(style.left, 10)
-    const offsetTop = parseInt(style.top, 10)
-    const offsetWidth = parseInt(style.width, 10)
     const rect = element.getBoundingClientRect()
-    const outerWidth = rect.width
-    return new DragTarget({ element, offsetLeft, offsetTop, offsetWidth, outerWidth })
+    return new DragTarget({
+      element,
+      offsetLeft: parseInt(style.left, 10),
+      offsetTop: parseInt(style.top, 10),
+      offsetWidth: parseInt(style.width, 10),
+      outerWidth: rect.width
+    })
   }
 
   css (props) {
