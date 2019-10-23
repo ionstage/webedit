@@ -306,8 +306,8 @@ class RightEdgeDragStrategy extends EdgeDragStrategy {
     if (!context.pointedTarget) {
       return false
     }
-    const width = context.pointedTarget.offsetWidth
-    return width - 12 <= context.x && context.x <= width
+    const outerWidth = context.pointedTarget.outerWidth
+    return outerWidth - 12 <= context.x && context.x <= outerWidth
   }
 
   onmove (targets, dx, _dy) {
