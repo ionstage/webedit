@@ -221,6 +221,14 @@ class DragTarget {
       '}\n'
     ].join('\n')
   }
+
+  addClass (className) {
+    this.element.classList.add(className)
+  }
+
+  removeClass (className) {
+    this.element.classList.remove(className)
+  }
 }
 
 class DragStrategy {
@@ -289,13 +297,13 @@ class MoveDragStrategy extends DragStrategy {
 class EdgeDragStrategy extends DragStrategy {
   onstart (targets) {
     for (const target of targets) {
-      target.css({ borderColor: 'orange' })
+      target.addClass('_webedit_resizing')
     }
   }
 
   onend (targets) {
     for (const target of targets) {
-      target.css({ borderColor: '' })
+      target.removeClass('_webedit_resizing')
       console.log(target.cssLog())
     }
   }
@@ -426,6 +434,9 @@ class WebEdit {
       }`,
       `._webedit :not(._webedit_target) {
         pointer-events: none;
+      }`,
+      `._webedit ._webedit_resizing {
+        border-color: orange;
       }`
     ]
   }
