@@ -154,6 +154,10 @@ class Selection {
     this.renderer.update(this.onupdate)
   }
 
+  includes (element) {
+    return this.elements.includes(element)
+  }
+
   forEach (callback) {
     this.elements.forEach(callback, this)
   }
