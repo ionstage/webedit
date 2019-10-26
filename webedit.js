@@ -370,6 +370,14 @@ class DragHandler {
     this.strategy = this.noopStrategy
   }
 
+  arrangeSelection (element) {
+    if (this.selection.includes(element)) {
+      return
+    }
+    this.selection.clear()
+    this.selection.add(element)
+  }
+
   findTarget (element) {
     return this.targets.find(target => target.element === element) || null
   }
@@ -380,8 +388,7 @@ class DragHandler {
   }
 
   start (context) {
-    this.selection.clear()
-    this.selection.add(context.event.target)
+    this.arrangeSelection(context.event.target)
     this.targets = this.selection.map(DragTarget.create)
     this.pointedTarget = this.findTarget(context.event.target)
     if (this.pointedTarget) {
