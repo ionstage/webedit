@@ -325,9 +325,7 @@ class RightEdgeDragStrategy extends EdgeDragStrategy {
   onmove (targets, dx, _dy) {
     for (const target of targets) {
       const width = target.offsetWidth + dx
-      target.css({
-        width: Math.max(width, 24) + 'px'
-      })
+      target.css({ width: Math.max(width, 24) + 'px' })
     }
   }
 }
