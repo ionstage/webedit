@@ -440,11 +440,11 @@ class WebEdit {
         margin: -1px;
         pointer-events: auto;
       }`,
-      `._webedit ._webedit_selected {
-        border-color: red;
-      }`,
       `._webedit :not(._webedit_target) {
         pointer-events: none;
+      }`,
+      `._webedit ._webedit_selected {
+        border-color: red;
       }`,
       `._webedit ._webedit_resizing {
         border-color: orange;
