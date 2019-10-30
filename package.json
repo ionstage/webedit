@@ -1,0 +1,12 @@
+{
+  "name": "webedit",
+  "version": "0.1.0",
+  "description": "JavaScript library for editing web page",
+  "main": "webedit.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ionstage/webedit.git"
+  },
+  "author": "iOnStage",
+  "license": "MIT"
+}
