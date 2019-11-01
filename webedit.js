@@ -219,6 +219,7 @@ class DragTarget {
     const style = window.getComputedStyle(this.element)
     return [
       `#${this.element.id} {`,
+      `  height: ${parseInt(style.height, 10)}px;`,
       `  left: ${parseInt(style.left, 10)}px;`,
       `  top: ${parseInt(style.top, 10)}px;`,
       `  width: ${parseInt(style.width, 10)}px;`,
