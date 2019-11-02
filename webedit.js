@@ -198,6 +198,7 @@ class DragTarget {
     this.offsetWidth = props.offsetWidth
     this.offsetHeight = props.offsetHeight
     this.outerWidth = props.outerWidth
+    this.outerHeight = props.outerHeight
   }
 
   static create (element) {
@@ -209,7 +210,8 @@ class DragTarget {
       offsetTop: parseInt(style.top, 10),
       offsetWidth: parseInt(style.width, 10),
       offsetHeight: parseInt(style.height, 10),
-      outerWidth: rect.width
+      outerWidth: rect.width,
+      outerHeight: rect.height
     })
   }
 
