@@ -387,8 +387,8 @@ class DragHandler {
     return this.targets.find(target => target.element === element) || null
   }
 
-  retrieveStrategy (pointedTarget, x) {
-    const context = { pointedTarget, x }
+  retrieveStrategy (pointedTarget, x, y) {
+    const context = { pointedTarget, x, y }
     return this.strategies.find(strategy => strategy.match(context)) || this.noopStrategy
   }
 
@@ -399,7 +399,7 @@ class DragHandler {
     if (this.pointedTarget) {
       context.event.preventDefault()
     }
-    this.strategy = this.retrieveStrategy(this.pointedTarget, context.x)
+    this.strategy = this.retrieveStrategy(this.pointedTarget, context.x, context.y)
     this.strategy.start(this.targets)
   }
 
