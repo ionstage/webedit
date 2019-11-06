@@ -335,6 +335,23 @@ class RightEdgeDragStrategy extends EdgeDragStrategy {
   }
 }
 
+class BottomEdgeDragStrategy extends EdgeDragStrategy {
+  match (context) {
+    if (!context.pointedTarget) {
+      return false
+    }
+    const outerHeight = context.pointedTarget.outerHeight
+    return outerHeight - 12 <= context.y && context.y <= outerHeight
+  }
+
+  onmove (targets, _dx, dy) {
+    for (const target of targets) {
+      const height = target.offsetHeight + dy
+      target.css({ height: Math.max(height, 24) + 'px' })
+    }
+  }
+}
+
 class LeftEdgeDragStrategy extends EdgeDragStrategy {
   match (context) {
     if (!context.pointedTarget) {
@@ -366,6 +383,7 @@ class DragHandler {
     this.pointedTarget = null
     this.strategies = [
       new RightEdgeDragStrategy({ renderer: props.renderer }),
+      new BottomEdgeDragStrategy({ renderer: props.renderer }),
       new LeftEdgeDragStrategy({ renderer: props.renderer }),
       new MoveDragStrategy({ renderer: props.renderer })
     ]
