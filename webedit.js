@@ -376,6 +376,30 @@ class LeftEdgeDragStrategy extends EdgeDragStrategy {
   }
 }
 
+class TopEdgeDragStrategy extends EdgeDragStrategy {
+  match (context) {
+    if (!context.pointedTarget) {
+      return false
+    }
+    return context.y >= 0 && context.y <= 12
+  }
+
+  onmove (targets, _dx, dy) {
+    for (const target of targets) {
+      let height = target.offsetHeight - dy
+      if (height < 24) {
+        dy = target.offsetHeight - 24
+        height = 24
+      }
+      const top = target.offsetTop + dy
+      target.css({
+        height: height + 'px',
+        top: top + 'px'
+      })
+    }
+  }
+}
+
 class DragHandler {
   constructor (props) {
     this.selection = props.selection
@@ -385,6 +409,7 @@ class DragHandler {
       new RightEdgeDragStrategy({ renderer: props.renderer }),
       new BottomEdgeDragStrategy({ renderer: props.renderer }),
       new LeftEdgeDragStrategy({ renderer: props.renderer }),
+      new TopEdgeDragStrategy({ renderer: props.renderer }),
       new MoveDragStrategy({ renderer: props.renderer })
     ]
     this.noopStrategy = new NoopDragStrategy({ renderer: props.renderer })
