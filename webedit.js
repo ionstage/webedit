@@ -243,6 +243,9 @@ class DragTarget {
 class DragStrategy {
   constructor (props) {
     this.renderer = props.renderer
+    this.onstart = this.onstart.bind(this)
+    this.onmove = this.onmove.bind(this)
+    this.onend = this.onend.bind(this)
   }
 
   /* template */
