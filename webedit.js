@@ -403,12 +403,35 @@ class TopEdgeDragStrategy extends EdgeDragStrategy {
   }
 }
 
+class MultipleEdgeDragStrategy extends EdgeDragStrategy {
+  constructor (props) {
+    super(props)
+    this.strategies = []
+  }
+
+  match (context) {
+    return this.strategies.every(strategy => strategy.match(context))
+  }
+
+  onmove (targets, dx, dy) {
+    this.strategies.forEach(strategy => strategy.onmove(targets, dx, dy))
+  }
+}
+
+class BottomRightCornerDragStrategy extends MultipleEdgeDragStrategy {
+  constructor (props) {
+    super(props)
+    this.strategies.push(new RightEdgeDragStrategy(props), new BottomEdgeDragStrategy(props))
+  }
+}
+
 class DragHandler {
   constructor (props) {
     this.selection = props.selection
     this.targets = []
     this.pointedTarget = null
     this.strategies = [
+      new BottomRightCornerDragStrategy({ renderer: props.renderer }),
       new RightEdgeDragStrategy({ renderer: props.renderer }),
       new BottomEdgeDragStrategy({ renderer: props.renderer }),
       new LeftEdgeDragStrategy({ renderer: props.renderer }),
