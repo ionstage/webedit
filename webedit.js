@@ -439,6 +439,13 @@ class TopRightCornerDragStrategy extends MultipleEdgeDragStrategy {
   }
 }
 
+class TopLeftCornerDragStrategy extends MultipleEdgeDragStrategy {
+  constructor (props) {
+    super(props)
+    this.strategies.push(new LeftEdgeDragStrategy(props), new TopEdgeDragStrategy(props))
+  }
+}
+
 class DragHandler {
   constructor (props) {
     this.selection = props.selection
@@ -448,6 +455,7 @@ class DragHandler {
       new BottomRightCornerDragStrategy({ renderer: props.renderer }),
       new BottomLeftCornerDragStrategy({ renderer: props.renderer }),
       new TopRightCornerDragStrategy({ renderer: props.renderer }),
+      new TopLeftCornerDragStrategy({ renderer: props.renderer }),
       new RightEdgeDragStrategy({ renderer: props.renderer }),
       new BottomEdgeDragStrategy({ renderer: props.renderer }),
       new LeftEdgeDragStrategy({ renderer: props.renderer }),
