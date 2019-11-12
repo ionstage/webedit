@@ -550,14 +550,14 @@ class WebEdit {
     ]
   }
 
-  static insertCSSRules (rules) {
+  insertCSSRules (rules) {
     const style = document.createElement('style')
     document.head.appendChild(style)
     rules.forEach((rule, index) => style.sheet.insertRule(rule, index))
   }
 
   enable () {
-    WebEdit.insertCSSRules(WebEdit.CSS_RULES)
+    this.insertCSSRules(WebEdit.CSS_RULES)
     document.body.classList.add('_webedit')
     this.draggable.enable()
     this.keyInput.enable()
