@@ -46,8 +46,9 @@ class Draggable {
   static getOffset (element) {
     const rect = element.getBoundingClientRect()
     const bodyRect = document.body.getBoundingClientRect()
-    const x = rect.left - element.scrollLeft - bodyRect.left
-    const y = rect.top - element.scrollTop - bodyRect.top
+    const bodyStyle = window.getComputedStyle(document.body)
+    const x = rect.left - element.scrollLeft - bodyRect.left + parseInt(bodyStyle.marginLeft, 10)
+    const y = rect.top - element.scrollTop - bodyRect.top + parseInt(bodyStyle.marginTop, 10)
     return { x, y }
   }
 
