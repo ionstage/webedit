@@ -519,7 +519,7 @@ class WebEdit {
       renderer: this.renderer
     })
     this.draggable = new Draggable({
-      element: document.body,
+      element: document,
       onstart: this.dragHandler.start.bind(this.dragHandler),
       onmove: this.dragHandler.move.bind(this.dragHandler),
       onend: this.dragHandler.end.bind(this.dragHandler)
