@@ -534,18 +534,18 @@ class WebEdit {
 
   static get CSS_RULES () {
     return [
-      `._webedit ._webedit_target {
+      `._webedit_target {
         border: 1px solid cyan;
         margin: -1px;
         pointer-events: auto;
       }`,
-      `._webedit :not(._webedit_target) {
+      `._webedit_target > * {
         pointer-events: none;
       }`,
-      `._webedit ._webedit_selected {
+      `._webedit_selected {
         border-color: red;
       }`,
-      `._webedit ._webedit_resizing {
+      `._webedit_resizing {
         border-color: orange;
       }`
     ]
@@ -559,7 +559,6 @@ class WebEdit {
 
   enable () {
     this.insertCSSRules(WebEdit.CSS_RULES)
-    document.body.classList.add('_webedit')
     this.draggable.enable()
     this.keyInput.enable()
   }
