@@ -26,6 +26,8 @@ class Renderer {
   }
 }
 
+class Stylist {}
+
 class Draggable {
   constructor (props) {
     this.element = props.element
@@ -509,6 +511,7 @@ class DragHandler {
 class WebEdit {
   constructor () {
     this.renderer = new Renderer()
+    this.stylist = new Stylist()
     this.selection = new Selection({
       className: '_webedit_selected',
       filter: element => element.classList.contains('_webedit_target'),
