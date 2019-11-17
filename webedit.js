@@ -26,7 +26,16 @@ class Renderer {
   }
 }
 
-class Stylist {}
+class Stylist {
+  constructor () {
+    this.element = document.createElement('style')
+  }
+
+  activate (rules) {
+    document.head.appendChild(this.element)
+    rules.forEach((rule, index) => this.element.sheet.insertRule(rule, index))
+  }
+}
 
 class Draggable {
   constructor (props) {
@@ -554,14 +563,8 @@ class WebEdit {
     ]
   }
 
-  insertCSSRules (rules) {
-    const style = document.createElement('style')
-    document.head.appendChild(style)
-    rules.forEach((rule, index) => style.sheet.insertRule(rule, index))
-  }
-
   enable () {
-    this.insertCSSRules(WebEdit.CSS_RULES)
+    this.stylist.activate(WebEdit.CSS_RULES)
     this.draggable.enable()
     this.keyInput.enable()
   }
