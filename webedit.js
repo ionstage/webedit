@@ -521,7 +521,7 @@ class DragHandler {
   }
 }
 
-class WebEdit {
+export class WebEdit {
   constructor () {
     this.renderer = new Renderer()
     this.stylist = new Stylist()
@@ -581,9 +581,3 @@ class WebEdit {
     })
   }
 }
-
-const main = () => {
-  new WebEdit().enable()
-}
-
-main()
