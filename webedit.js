@@ -35,6 +35,10 @@ class Stylist {
     document.head.appendChild(this.element)
     rules.forEach((rule, index) => this.element.sheet.insertRule(rule, index))
   }
+
+  deactivate () {
+    document.head.removeChild(this.element)
+  }
 }
 
 class Draggable {
