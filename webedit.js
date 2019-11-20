@@ -41,98 +41,6 @@ class Stylist {
   }
 }
 
-class Draggable {
-  constructor (props) {
-    this.element = props.element
-    this.onstart = props.onstart
-    this.onmove = props.onmove
-    this.onend = props.onend
-    this.onmousedown = this.onmousedown.bind(this)
-    this.onmousemove = this.onmousemove.bind(this)
-    this.onmouseup = this.onmouseup.bind(this)
-    this.ontouchstart = this.ontouchstart.bind(this)
-    this.ontouchmove = this.ontouchmove.bind(this)
-    this.ontouchend = this.ontouchend.bind(this)
-    this.identifier = null
-    this.startPageX = 0
-    this.startPageY = 0
-  }
-
-  static getOffset (element) {
-    const rect = element.getBoundingClientRect()
-    const bodyRect = document.body.getBoundingClientRect()
-    const bodyStyle = window.getComputedStyle(document.body)
-    const x = rect.left - element.scrollLeft - bodyRect.left + parseInt(bodyStyle.marginLeft, 10)
-    const y = rect.top - element.scrollTop - bodyRect.top + parseInt(bodyStyle.marginTop, 10)
-    return { x, y }
-  }
-
-  enable () {
-    const supportsTouch = ('ontouchstart' in window || navigator.maxTouchPoints > 0)
-    const type = (supportsTouch ? 'touchstart' : 'mousedown')
-    this.element.addEventListener(type, this['on' + type], { passive: false })
-  }
-
-  onmousedown (event) {
-    const offset = Draggable.getOffset(event.target)
-    const x = event.pageX - offset.x
-    const y = event.pageY - offset.y
-    this.startPageX = event.pageX
-    this.startPageY = event.pageY
-    this.onstart.call(null, { x, y, event })
-    document.addEventListener('mousemove', this.onmousemove)
-    document.addEventListener('mouseup', this.onmouseup)
-  }
-
-  onmousemove (event) {
-    const dx = event.pageX - this.startPageX
-    const dy = event.pageY - this.startPageY
-    this.onmove.call(null, { dx, dy, event })
-  }
-
-  onmouseup (event) {
-    document.removeEventListener('mousemove', this.onmousemove)
-    document.removeEventListener('mouseup', this.onmouseup)
-    this.onend.call(null, { event })
-  }
-
-  ontouchstart (event) {
-    if (event.touches.length > 1) {
-      return
-    }
-    const touch = event.changedTouches[0]
-    const offset = Draggable.getOffset(event.target)
-    const x = touch.pageX - offset.x
-    const y = touch.pageY - offset.y
-    this.identifier = touch.identifier
-    this.startPageX = touch.pageX
-    this.startPageY = touch.pageY
-    this.onstart.call(null, { x, y, event })
-    document.addEventListener('touchmove', this.ontouchmove)
-    document.addEventListener('touchend', this.ontouchend)
-  }
-
-  ontouchmove (event) {
-    const touch = event.changedTouches[0]
-    if (touch.identifier !== this.identifier) {
-      return
-    }
-    const dx = touch.pageX - this.startPageX
-    const dy = touch.pageY - this.startPageY
-    this.onmove.call(null, { dx, dy, event })
-  }
-
-  ontouchend (event) {
-    const touch = event.changedTouches[0]
-    if (touch.identifier !== this.identifier) {
-      return
-    }
-    document.removeEventListener('touchmove', this.ontouchmove)
-    document.removeEventListener('touchend', this.ontouchend)
-    this.onend.call(null, { event })
-  }
-}
-
 class Selection {
   constructor (props) {
     this.className = props.className
@@ -186,23 +94,6 @@ class Selection {
     this.removedElements.forEach(element => element.classList.remove(this.className))
     this.addedElements.forEach(element => element.classList.add(this.className))
     this.previousElements = this.elements.slice()
-  }
-}
-
-class KeyInput {
-  constructor (handlers) {
-    this.handlers = handlers
-  }
-
-  enable () {
-    document.body.addEventListener('keydown', this.onkeydown.bind(this))
-  }
-
-  onkeydown (event) {
-    const handler = this.handlers[event.key]
-    if (handler) {
-      handler({ event })
-    }
   }
 }
 
@@ -518,6 +409,115 @@ class DragHandler {
 
   end () {
     this.strategy.end(this.targets)
+  }
+}
+
+class Draggable {
+  constructor (props) {
+    this.element = props.element
+    this.onstart = props.onstart
+    this.onmove = props.onmove
+    this.onend = props.onend
+    this.onmousedown = this.onmousedown.bind(this)
+    this.onmousemove = this.onmousemove.bind(this)
+    this.onmouseup = this.onmouseup.bind(this)
+    this.ontouchstart = this.ontouchstart.bind(this)
+    this.ontouchmove = this.ontouchmove.bind(this)
+    this.ontouchend = this.ontouchend.bind(this)
+    this.identifier = null
+    this.startPageX = 0
+    this.startPageY = 0
+  }
+
+  static getOffset (element) {
+    const rect = element.getBoundingClientRect()
+    const bodyRect = document.body.getBoundingClientRect()
+    const bodyStyle = window.getComputedStyle(document.body)
+    const x = rect.left - element.scrollLeft - bodyRect.left + parseInt(bodyStyle.marginLeft, 10)
+    const y = rect.top - element.scrollTop - bodyRect.top + parseInt(bodyStyle.marginTop, 10)
+    return { x, y }
+  }
+
+  enable () {
+    const supportsTouch = ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+    const type = (supportsTouch ? 'touchstart' : 'mousedown')
+    this.element.addEventListener(type, this['on' + type], { passive: false })
+  }
+
+  onmousedown (event) {
+    const offset = Draggable.getOffset(event.target)
+    const x = event.pageX - offset.x
+    const y = event.pageY - offset.y
+    this.startPageX = event.pageX
+    this.startPageY = event.pageY
+    this.onstart.call(null, { x, y, event })
+    document.addEventListener('mousemove', this.onmousemove)
+    document.addEventListener('mouseup', this.onmouseup)
+  }
+
+  onmousemove (event) {
+    const dx = event.pageX - this.startPageX
+    const dy = event.pageY - this.startPageY
+    this.onmove.call(null, { dx, dy, event })
+  }
+
+  onmouseup (event) {
+    document.removeEventListener('mousemove', this.onmousemove)
+    document.removeEventListener('mouseup', this.onmouseup)
+    this.onend.call(null, { event })
+  }
+
+  ontouchstart (event) {
+    if (event.touches.length > 1) {
+      return
+    }
+    const touch = event.changedTouches[0]
+    const offset = Draggable.getOffset(event.target)
+    const x = touch.pageX - offset.x
+    const y = touch.pageY - offset.y
+    this.identifier = touch.identifier
+    this.startPageX = touch.pageX
+    this.startPageY = touch.pageY
+    this.onstart.call(null, { x, y, event })
+    document.addEventListener('touchmove', this.ontouchmove)
+    document.addEventListener('touchend', this.ontouchend)
+  }
+
+  ontouchmove (event) {
+    const touch = event.changedTouches[0]
+    if (touch.identifier !== this.identifier) {
+      return
+    }
+    const dx = touch.pageX - this.startPageX
+    const dy = touch.pageY - this.startPageY
+    this.onmove.call(null, { dx, dy, event })
+  }
+
+  ontouchend (event) {
+    const touch = event.changedTouches[0]
+    if (touch.identifier !== this.identifier) {
+      return
+    }
+    document.removeEventListener('touchmove', this.ontouchmove)
+    document.removeEventListener('touchend', this.ontouchend)
+    this.onend.call(null, { event })
+  }
+}
+
+class KeyInput {
+  constructor (handlers) {
+    this.handlers = handlers
+  }
+
+  enable () {
+    document.body.addEventListener('keydown', this.onkeydown.bind(this))
+  }
+
+  onkeydown (event) {
+    const handler = this.handlers[event.key]
+    if (handler) {
+      handler({ event })
+    }
   }
 }
 
