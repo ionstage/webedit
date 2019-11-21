@@ -507,10 +507,15 @@ class Draggable {
 class KeyInput {
   constructor (handlers) {
     this.handlers = handlers
+    this.onkeydown = this.onkeydown.bind(this)
   }
 
   enable () {
-    document.body.addEventListener('keydown', this.onkeydown.bind(this))
+    document.body.addEventListener('keydown', this.onkeydown)
+  }
+
+  disable () {
+    document.body.removeEventListener('keydown', this.onkeydown)
   }
 
   onkeydown (event) {
