@@ -444,6 +444,16 @@ class Draggable {
     this.element.addEventListener(type, this['on' + type], { passive: false })
   }
 
+  disable () {
+    const supportsTouch = ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+    const startType = (supportsTouch ? 'touchstart' : 'mousedown')
+    const moveType = (supportsTouch ? 'touchmove' : 'mousemove')
+    const endType = (supportsTouch ? 'touchend' : 'mouseup')
+    this.element.removeEventListener(startType, this['on' + startType], { passive: false })
+    document.removeEventListener(moveType, this['on' + moveType])
+    document.removeEventListener(endType, this['on' + endType])
+  }
+
   onmousedown (event) {
     const offset = Draggable.getOffset(event.target)
     const x = event.pageX - offset.x
