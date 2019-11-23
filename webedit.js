@@ -588,6 +588,12 @@ export class WebEdit {
     this.keyInput.enable()
   }
 
+  disable () {
+    this.keyInput.disable()
+    this.draggable.disable()
+    this.stylist.deactivate()
+  }
+
   onkeyinput (name, diff, context) {
     context.event.preventDefault()
     this.selection.forEach(element => {
