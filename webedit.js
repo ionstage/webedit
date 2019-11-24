@@ -514,7 +514,19 @@ class Draggable {
   }
 }
 
-class KeyHandler {}
+class KeyHandler {
+  constructor (props) {
+    this.selection = props.selection
+  }
+
+  input (name, diff, context) {
+    context.event.preventDefault()
+    this.selection.forEach(element => {
+      const style = window.getComputedStyle(element)
+      element.style[name] = parseInt(style[name], 10) + diff + 'px'
+    })
+  }
+}
 
 class KeyInput {
   constructor (handlers) {
@@ -557,12 +569,12 @@ export class WebEdit {
       onmove: this.dragHandler.move.bind(this.dragHandler),
       onend: this.dragHandler.end.bind(this.dragHandler)
     })
-    this.keyHandler = new KeyHandler()
+    this.keyHandler = new KeyHandler({ selection: this.selection })
     this.keyInput = new KeyInput({
-      ArrowLeft: this.onkeyinput.bind(this, 'left', -1),
-      ArrowUp: this.onkeyinput.bind(this, 'top', -1),
-      ArrowRight: this.onkeyinput.bind(this, 'left', 1),
-      ArrowDown: this.onkeyinput.bind(this, 'top', 1)
+      ArrowLeft: this.keyHandler.input.bind(this.keyHandler, 'left', -1),
+      ArrowUp: this.keyHandler.input.bind(this.keyHandler, 'top', -1),
+      ArrowRight: this.keyHandler.input.bind(this.keyHandler, 'left', 1),
+      ArrowDown: this.keyHandler.input.bind(this.keyHandler, 'top', 1)
     })
   }
 
@@ -595,13 +607,5 @@ export class WebEdit {
     this.keyInput.disable()
     this.draggable.disable()
     this.stylist.deactivate()
-  }
-
-  onkeyinput (name, diff, context) {
-    context.event.preventDefault()
-    this.selection.forEach(element => {
-      const style = window.getComputedStyle(element)
-      element.style[name] = parseInt(style[name], 10) + diff + 'px'
-    })
   }
 }
