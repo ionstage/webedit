@@ -514,6 +514,8 @@ class Draggable {
   }
 }
 
+class KeyHandler {}
+
 class KeyInput {
   constructor (handlers) {
     this.handlers = handlers
@@ -555,6 +557,7 @@ export class WebEdit {
       onmove: this.dragHandler.move.bind(this.dragHandler),
       onend: this.dragHandler.end.bind(this.dragHandler)
     })
+    this.keyHandler = new KeyHandler()
     this.keyInput = new KeyInput({
       ArrowLeft: this.onkeyinput.bind(this, 'left', -1),
       ArrowUp: this.onkeyinput.bind(this, 'top', -1),
