@@ -526,6 +526,22 @@ class KeyHandler {
       element.style[name] = parseInt(style[name], 10) + diff + 'px'
     })
   }
+
+  inputLeft (context) {
+    this.input('left', -1, context)
+  }
+
+  inputUp (context) {
+    this.input('top', -1, context)
+  }
+
+  inputRight (context) {
+    this.input('left', 1, context)
+  }
+
+  inputDown (context) {
+    this.input('top', 1, context)
+  }
 }
 
 class KeyInput {
@@ -571,10 +587,10 @@ export class WebEdit {
     })
     this.keyHandler = new KeyHandler({ selection: this.selection })
     this.keyInput = new KeyInput({
-      ArrowLeft: this.keyHandler.input.bind(this.keyHandler, 'left', -1),
-      ArrowUp: this.keyHandler.input.bind(this.keyHandler, 'top', -1),
-      ArrowRight: this.keyHandler.input.bind(this.keyHandler, 'left', 1),
-      ArrowDown: this.keyHandler.input.bind(this.keyHandler, 'top', 1)
+      ArrowLeft: this.keyHandler.inputLeft.bind(this.keyHandler),
+      ArrowUp: this.keyHandler.inputUp.bind(this.keyHandler),
+      ArrowRight: this.keyHandler.inputRight.bind(this.keyHandler),
+      ArrowDown: this.keyHandler.inputDown.bind(this.keyHandler)
     })
   }
 
