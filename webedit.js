@@ -519,28 +519,33 @@ class KeyHandler {
     this.selection = props.selection
   }
 
-  input (event, name, diff) {
+  input (event, dx, dy) {
     event.preventDefault()
     this.selection.forEach(element => {
       const style = window.getComputedStyle(element)
-      element.style[name] = parseInt(style[name], 10) + diff + 'px'
+      if (dx !== 0) {
+        element.style.left = parseInt(style.left, 10) + dx + 'px'
+      }
+      if (dy !== 0) {
+        element.style.top = parseInt(style.top, 10) + dy + 'px'
+      }
     })
   }
 
   inputLeft (context) {
-    this.input(context.event, 'left', -1)
+    this.input(context.event, -1, 0)
   }
 
   inputUp (context) {
-    this.input(context.event, 'top', -1)
+    this.input(context.event, 0, -1)
   }
 
   inputRight (context) {
-    this.input(context.event, 'left', 1)
+    this.input(context.event, 1, 0)
   }
 
   inputDown (context) {
-    this.input(context.event, 'top', 1)
+    this.input(context.event, 0, 1)
   }
 }
 
