@@ -517,19 +517,17 @@ class Draggable {
 class KeyHandler {
   constructor (props) {
     this.selection = props.selection
+    this.renderer = props.renderer
+    this.dx = 0
+    this.dy = 0
+    this.onupdate = this.onupdate.bind(this)
   }
 
   input (event, dx, dy) {
     event.preventDefault()
-    this.selection.forEach(element => {
-      const style = window.getComputedStyle(element)
-      if (dx !== 0) {
-        element.style.left = parseInt(style.left, 10) + dx + 'px'
-      }
-      if (dy !== 0) {
-        element.style.top = parseInt(style.top, 10) + dy + 'px'
-      }
-    })
+    this.dx += dx
+    this.dy += dy
+    this.renderer.update(this.onupdate)
   }
 
   inputLeft (context) {
@@ -546,6 +544,20 @@ class KeyHandler {
 
   inputDown (context) {
     this.input(context.event, 0, 1)
+  }
+
+  onupdate () {
+    this.selection.forEach(element => {
+      const style = window.getComputedStyle(element)
+      if (this.dx !== 0) {
+        element.style.left = parseInt(style.left, 10) + this.dx + 'px'
+        this.dx = 0
+      }
+      if (this.dy !== 0) {
+        element.style.top = parseInt(style.top, 10) + this.dy + 'px'
+        this.dy = 0
+      }
+    })
   }
 }
 
@@ -590,7 +602,10 @@ export class WebEdit {
       onmove: this.dragHandler.move.bind(this.dragHandler),
       onend: this.dragHandler.end.bind(this.dragHandler)
     })
-    this.keyHandler = new KeyHandler({ selection: this.selection })
+    this.keyHandler = new KeyHandler({
+      selection: this.selection,
+      renderer: this.renderer
+    })
     this.keyInput = new KeyInput({
       ArrowLeft: this.keyHandler.inputLeft.bind(this.keyHandler),
       ArrowUp: this.keyHandler.inputUp.bind(this.keyHandler),
