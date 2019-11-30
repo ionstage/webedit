@@ -551,13 +551,13 @@ class KeyHandler {
       const style = window.getComputedStyle(element)
       if (this.dx !== 0) {
         element.style.left = parseInt(style.left, 10) + this.dx + 'px'
-        this.dx = 0
       }
       if (this.dy !== 0) {
         element.style.top = parseInt(style.top, 10) + this.dy + 'px'
-        this.dy = 0
       }
     })
+    this.dx = 0
+    this.dy = 0
   }
 }
 
