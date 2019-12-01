@@ -617,7 +617,7 @@ export class WebEdit {
   static get CSS_RULES () {
     return [
       `._webedit_target {
-        border: 1px solid cyan;
+        border: 1px solid #18FFFF;
         margin: -1px;
         pointer-events: auto;
       }`,
@@ -625,10 +625,10 @@ export class WebEdit {
         pointer-events: none;
       }`,
       `._webedit_selected {
-        border-color: red;
+        border-color: #FF5252;
       }`,
       `._webedit_resizing {
-        border-color: orange;
+        border-color: #FFAB40;
       }`
     ]
   }
