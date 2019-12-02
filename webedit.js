@@ -576,7 +576,7 @@ class KeyInput {
   }
 
   onkeydown (event) {
-    const handler = this.handlers[event.key]
+    const handler = this.handlers[event.key.toLowerCase()]
     if (handler) {
       handler({ event })
     }
@@ -607,10 +607,10 @@ export class WebEdit {
       renderer: this.renderer
     })
     this.keyInput = new KeyInput({
-      ArrowLeft: this.keyHandler.inputLeft.bind(this.keyHandler),
-      ArrowUp: this.keyHandler.inputUp.bind(this.keyHandler),
-      ArrowRight: this.keyHandler.inputRight.bind(this.keyHandler),
-      ArrowDown: this.keyHandler.inputDown.bind(this.keyHandler)
+      arrowleft: this.keyHandler.inputLeft.bind(this.keyHandler),
+      arrowup: this.keyHandler.inputUp.bind(this.keyHandler),
+      arrowright: this.keyHandler.inputRight.bind(this.keyHandler),
+      arrowdown: this.keyHandler.inputDown.bind(this.keyHandler)
     })
   }
 
