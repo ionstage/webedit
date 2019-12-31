@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style>
+    body {
+      margin: 0;
+      position: relative;
+    }
+
+    .controls {
+      padding: 8px;
+      position: fixed;
+      z-index: 1;
+    }
+
+    .rect {
+      height: 96px;
+      position: absolute;
+      width: 96px;
+    }
+
+    #rect1 {
+      background-color: #F44336;
+      left: 24px;
+      top: 48px;
+    }
+
+    #rect2 {
+      background-color: #4CAF50;
+      left: 144px;
+      top: 48px;
+    }
+
+    #rect3 {
+      background-color: #2196F3;
+      left: 264px;
+      top: 48px;
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <button id="button-enable">Enable</button>
+    <button id="button-disable" disabled>Disable</button>
+  </div>
+  <div id="rect1" class="rect _webedit_target"></div>
+  <div id="rect2" class="rect _webedit_target"></div>
+  <div id="rect3" class="rect _webedit_target"></div>
+  <script type="module">
+    import { WebEdit } from '../webedit.js'
+
+    const webedit = new WebEdit()
+    const enableButton = document.getElementById('button-enable')
+    const disableButton = document.getElementById('button-disable')
+
+    enableButton.addEventListener('click', () => {
+      webedit.enable()
+      enableButton.setAttribute('disabled', '')
+      disableButton.removeAttribute('disabled')
+    })
+
+    disableButton.addEventListener('click', () => {
+      webedit.disable()
+      enableButton.removeAttribute('disabled')
+      disableButton.setAttribute('disabled', '')
+    })
+  </script>
+</body>
+</html>
