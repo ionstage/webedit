@@ -4,7 +4,7 @@ JavaScript library for editing web page
 
 ## Demo
 
-- [Sample](http://www.ionstage.org/webedit/)
+- [Sample](https://www.ionstage.org/webedit/demo/sample.html)
 
 ## License
 
