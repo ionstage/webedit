@@ -145,6 +145,10 @@ class DragTarget {
   removeClass (className) {
     this.element.classList.remove(className)
   }
+
+  moveTo (left, top) {
+    this.element.style.transform = 'translate3d(' + left + 'px, ' + top + 'px, 0)'
+  }
 }
 
 class DragStrategy {
