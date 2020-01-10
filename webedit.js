@@ -108,13 +108,23 @@ class DragTarget {
     this.outerHeight = props.outerHeight
   }
 
+  static getOffset (element) {
+    const rect = element.getBoundingClientRect()
+    const bodyRect = document.body.getBoundingClientRect()
+    const bodyStyle = window.getComputedStyle(document.body)
+    const x = rect.left - element.scrollLeft - bodyRect.left + parseInt(bodyStyle.marginLeft, 10)
+    const y = rect.top - element.scrollTop - bodyRect.top + parseInt(bodyStyle.marginTop, 10)
+    return { x, y }
+  }
+
   static create (element) {
+    const offset = DragTarget.getOffset(element)
     const style = window.getComputedStyle(element)
     const rect = element.getBoundingClientRect()
     return new DragTarget({
       element,
-      offsetLeft: parseInt(style.left, 10),
-      offsetTop: parseInt(style.top, 10),
+      offsetLeft: offset.x + 1,
+      offsetTop: offset.y + 1,
       offsetWidth: parseInt(style.width, 10),
       offsetHeight: parseInt(style.height, 10),
       outerWidth: rect.width,
