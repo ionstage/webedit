@@ -211,12 +211,7 @@ class MoveDragStrategy extends DragStrategy {
 
   onmove (targets, dx, dy) {
     for (const target of targets) {
-      const left = target.offsetLeft + dx
-      const top = target.offsetTop + dy
-      target.css({
-        left: left + 'px',
-        top: top + 'px'
-      })
+      target.moveTo(target.offsetLeft + dx, target.offsetTop + dy)
     }
   }
 
@@ -291,11 +286,8 @@ class LeftEdgeDragStrategy extends EdgeDragStrategy {
         dx = target.offsetWidth - 24
         width = 24
       }
-      const left = target.offsetLeft + dx
-      target.css({
-        left: left + 'px',
-        width: width + 'px'
-      })
+      target.moveTo(target.offsetLeft + dx, target.offsetTop)
+      target.css({ width: width + 'px' })
     }
   }
 }
@@ -315,11 +307,8 @@ class TopEdgeDragStrategy extends EdgeDragStrategy {
         dy = target.offsetHeight - 24
         height = 24
       }
-      const top = target.offsetTop + dy
-      target.css({
-        height: height + 'px',
-        top: top + 'px'
-      })
+      target.moveTo(target.offsetLeft, target.offsetTop + dy)
+      target.css({ height: height + 'px' })
     }
   }
 }
