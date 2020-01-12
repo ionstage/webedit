@@ -137,12 +137,12 @@ class DragTarget {
   }
 
   cssLog () {
+    const offset = DragTarget.getOffset(this.element)
     const style = window.getComputedStyle(this.element)
     return [
       `#${this.element.id} {`,
       `  height: ${parseInt(style.height, 10)}px;`,
-      `  left: ${parseInt(style.left, 10)}px;`,
-      `  top: ${parseInt(style.top, 10)}px;`,
+      `  transform: translate3d(${offset.x + 1}px, ${offset.y + 1}px, 0);`,
       `  width: ${parseInt(style.width, 10)}px;`,
       '}\n'
     ].join('\n')
