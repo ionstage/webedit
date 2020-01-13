@@ -156,8 +156,8 @@ class DragTarget {
     this.element.classList.remove(className)
   }
 
-  moveTo (left, top) {
-    this.element.style.transform = 'translate3d(' + left + 'px, ' + top + 'px, 0)'
+  moveTo (x, y) {
+    this.element.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)'
   }
 }
 
