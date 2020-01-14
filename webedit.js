@@ -159,6 +159,11 @@ class DragTarget {
   moveTo (x, y) {
     this.element.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)'
   }
+
+  moveBy (dx, dy) {
+    const offset = DragTarget.getOffset(this.element)
+    this.moveTo(offset.x + 1 + dx, offset.y + 1 + dy)
+  }
 }
 
 class DragStrategy {
