@@ -555,15 +555,7 @@ class KeyHandler {
   }
 
   onupdate () {
-    this.selection.forEach(element => {
-      const style = window.getComputedStyle(element)
-      if (this.dx !== 0) {
-        element.style.left = parseInt(style.left, 10) + this.dx + 'px'
-      }
-      if (this.dy !== 0) {
-        element.style.top = parseInt(style.top, 10) + this.dy + 'px'
-      }
-    })
+    this.selection.forEach(element => DragTarget.create(element).moveBy(this.dx, this.dy))
     this.dx = 0
     this.dy = 0
   }
