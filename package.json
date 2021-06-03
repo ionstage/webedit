@@ -3,6 +3,9 @@
   "version": "0.1.4",
   "description": "JavaScript library for editing web page",
   "main": "webedit.js",
+  "devDependencies": {
+    "eslint": "^7.27.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ionstage/webedit.git"
