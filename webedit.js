@@ -109,11 +109,10 @@ class DragTarget {
   }
 
   static getOffset(element) {
-    const rect = element.getBoundingClientRect();
-    const bodyRect = document.body.getBoundingClientRect();
-    const bodyStyle = window.getComputedStyle(document.body);
-    const x = rect.left - element.scrollLeft - bodyRect.left + parseInt(bodyStyle.marginLeft, 10);
-    const y = rect.top - element.scrollTop - bodyRect.top + parseInt(bodyStyle.marginTop, 10);
+    const transform = window.getComputedStyle(element).transform;
+    const pair = transform.split(',').slice(4);
+    const x = parseInt(pair[0] || 0, 10);
+    const y = parseInt(pair[1] || 0, 10);
     return { x, y };
   }
 
