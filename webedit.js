@@ -141,7 +141,7 @@ class DragTarget {
     return [
       `#${this.element.id} {`,
       `  height: ${parseInt(style.height, 10)}px;`,
-      `  transform: translate3d(${offset.x + 1}px, ${offset.y + 1}px, 0);`,
+      `  transform: translate(${offset.x + 1}px, ${offset.y + 1}px);`,
       `  width: ${parseInt(style.width, 10)}px;`,
       '}\n',
     ].join('\n');
@@ -156,7 +156,7 @@ class DragTarget {
   }
 
   moveTo(x, y) {
-    this.element.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+    this.element.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
   }
 
   moveBy(dx, dy) {
