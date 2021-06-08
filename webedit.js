@@ -617,6 +617,7 @@ export class WebEdit {
     return [
       `._webedit_target {
         border: 1px solid #18FFFF;
+        cursor: default;
         margin: -1px;
         pointer-events: auto;
       }`,
