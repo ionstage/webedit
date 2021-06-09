@@ -46,23 +46,23 @@
   <div id="rect2" class="rect _webedit_target"></div>
   <div id="rect3" class="rect _webedit_target"></div>
   <script type="module">
-    import { WebEdit } from '../webedit.js'
+    import { WebEdit } from '../webedit.js';
 
-    const webedit = new WebEdit()
-    const enableButton = document.getElementById('button-enable')
-    const disableButton = document.getElementById('button-disable')
+    const webedit = new WebEdit();
+    const enableButton = document.getElementById('button-enable');
+    const disableButton = document.getElementById('button-disable');
 
     enableButton.addEventListener('click', () => {
-      webedit.enable()
-      enableButton.setAttribute('disabled', '')
-      disableButton.removeAttribute('disabled')
-    })
+      webedit.enable();
+      enableButton.setAttribute('disabled', '');
+      disableButton.removeAttribute('disabled');
+    });
 
     disableButton.addEventListener('click', () => {
-      webedit.disable()
-      enableButton.removeAttribute('disabled')
-      disableButton.setAttribute('disabled', '')
-    })
+      webedit.disable();
+      enableButton.removeAttribute('disabled');
+      disableButton.setAttribute('disabled', '');
+    });
   </script>
 </body>
 </html>
