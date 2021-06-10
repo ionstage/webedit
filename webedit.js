@@ -156,7 +156,7 @@ class DragTarget {
   }
 
   moveTo(x, y) {
-    this.element.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+    this.element.style.transform = `translate(${x}px, ${y}px)`;
   }
 
   moveBy(dx, dy) {
