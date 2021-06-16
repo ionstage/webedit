@@ -436,6 +436,10 @@ class Draggable {
     this.startPageY = 0;
   }
 
+  static supportsTouch() {
+    return ('ontouchstart' in window || (typeof DocumentTouch !== 'undefined' && document instanceof DocumentTouch));
+  }
+
   static getOffset(element) {
     const rect = element.getBoundingClientRect();
     const bodyRect = document.body.getBoundingClientRect();
@@ -446,13 +450,12 @@ class Draggable {
   }
 
   enable() {
-    const supportsTouch = ('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    const type = (supportsTouch ? 'touchstart' : 'mousedown');
+    const type = (Draggable.supportsTouch() ? 'touchstart' : 'mousedown');
     this.element.addEventListener(type, this['on' + type], { passive: false });
   }
 
   disable() {
-    const supportsTouch = ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    const supportsTouch = Draggable.supportsTouch();
     const startType = (supportsTouch ? 'touchstart' : 'mousedown');
     const moveType = (supportsTouch ? 'touchmove' : 'mousemove');
     const endType = (supportsTouch ? 'touchend' : 'mouseup');
