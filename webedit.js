@@ -466,8 +466,8 @@ class Draggable {
 
   onmousedown(event) {
     const offset = Draggable.getOffset(event.target);
-    const x = event.pageX - offset.x;
-    const y = event.pageY - offset.y;
+    const x = event.clientX - offset.x;
+    const y = event.clientY - offset.y;
     this.startPageX = event.pageX;
     this.startPageY = event.pageY;
     this.onstart.call(null, { x, y, event });
@@ -493,8 +493,8 @@ class Draggable {
     }
     const touch = event.changedTouches[0];
     const offset = Draggable.getOffset(event.target);
-    const x = touch.pageX - offset.x;
-    const y = touch.pageY - offset.y;
+    const x = touch.clientX - offset.x;
+    const y = touch.clientY - offset.y;
     this.identifier = touch.identifier;
     this.startPageX = touch.pageX;
     this.startPageY = touch.pageY;
