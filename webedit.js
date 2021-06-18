@@ -380,14 +380,14 @@ class DragHandler {
     this.strategy = this.noopStrategy;
   }
 
-  arrangeSelection(context) {
-    if (this.selection.includes(context.event.target)) {
+  arrangeSelection(event) {
+    if (this.selection.includes(event.target)) {
       return;
     }
-    if (!context.event.shiftKey) {
+    if (!event.shiftKey) {
       this.selection.clear();
     }
-    this.selection.add(context.event.target);
+    this.selection.add(event.target);
   }
 
   findTarget(element) {
@@ -399,19 +399,19 @@ class DragHandler {
     return this.strategies.find(strategy => strategy.match(context)) || this.noopStrategy;
   }
 
-  start(context) {
-    this.arrangeSelection(context);
+  start(x, y, event) {
+    this.arrangeSelection(event);
     this.targets = this.selection.map(DragTarget.create);
-    this.pointedTarget = this.findTarget(context.event.target);
+    this.pointedTarget = this.findTarget(event.target);
     if (this.pointedTarget) {
-      context.event.preventDefault();
+      event.preventDefault();
     }
-    this.strategy = this.retrieveStrategy(this.pointedTarget, context.x, context.y);
+    this.strategy = this.retrieveStrategy(this.pointedTarget, x, y);
     this.strategy.start(this.targets);
   }
 
-  move(context) {
-    this.strategy.move(this.targets, context.dx, context.dy);
+  move(dx, dy) {
+    this.strategy.move(this.targets, dx, dy);
   }
 
   end() {
@@ -470,7 +470,7 @@ class Draggable {
     const y = event.clientY - offset.y;
     this.startPageX = event.pageX;
     this.startPageY = event.pageY;
-    this.onstart.call(null, { x, y, event });
+    this.onstart.call(null, x, y, event);
     document.addEventListener('mousemove', this.onmousemove);
     document.addEventListener('mouseup', this.onmouseup);
   }
@@ -478,13 +478,13 @@ class Draggable {
   onmousemove(event) {
     const dx = event.pageX - this.startPageX;
     const dy = event.pageY - this.startPageY;
-    this.onmove.call(null, { dx, dy, event });
+    this.onmove.call(null, dx, dy, event);
   }
 
   onmouseup(event) {
     document.removeEventListener('mousemove', this.onmousemove);
     document.removeEventListener('mouseup', this.onmouseup);
-    this.onend.call(null, { event });
+    this.onend.call(null, event);
   }
 
   ontouchstart(event) {
@@ -498,7 +498,7 @@ class Draggable {
     this.identifier = touch.identifier;
     this.startPageX = touch.pageX;
     this.startPageY = touch.pageY;
-    this.onstart.call(null, { x, y, event });
+    this.onstart.call(null, x, y, event);
     document.addEventListener('touchmove', this.ontouchmove);
     document.addEventListener('touchend', this.ontouchend);
   }
@@ -510,7 +510,7 @@ class Draggable {
     }
     const dx = touch.pageX - this.startPageX;
     const dy = touch.pageY - this.startPageY;
-    this.onmove.call(null, { dx, dy, event });
+    this.onmove.call(null, dx, dy, event);
   }
 
   ontouchend(event) {
@@ -520,7 +520,7 @@ class Draggable {
     }
     document.removeEventListener('touchmove', this.ontouchmove);
     document.removeEventListener('touchend', this.ontouchend);
-    this.onend.call(null, { event });
+    this.onend.call(null, event);
   }
 }
 
