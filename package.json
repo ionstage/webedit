@@ -1,6 +1,6 @@
 {
   "name": "webedit",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "JavaScript library for editing web page",
   "main": "webedit.js",
   "devDependencies": {
