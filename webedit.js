@@ -482,9 +482,11 @@ class Draggable {
   }
 
   onmouseup(event) {
+    const dx = event.pageX - this.startPageX;
+    const dy = event.pageY - this.startPageY;
     document.removeEventListener('mousemove', this.onmousemove);
     document.removeEventListener('mouseup', this.onmouseup);
-    this.onend.call(null, event);
+    this.onend.call(null, dx, dy, event);
   }
 
   ontouchstart(event) {
@@ -518,9 +520,11 @@ class Draggable {
     if (touch.identifier !== this.identifier) {
       return;
     }
+    const dx = touch.pageX - this.startPageX;
+    const dy = touch.pageY - this.startPageY;
     document.removeEventListener('touchmove', this.ontouchmove);
     document.removeEventListener('touchend', this.ontouchend);
-    this.onend.call(null, event);
+    this.onend.call(null, dx, dy, event);
   }
 }
 
