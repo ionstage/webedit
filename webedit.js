@@ -449,6 +449,19 @@ class Draggable {
     return { x, y };
   }
 
+  static debounce(func, delay) {
+    let t = 0;
+    return (...args) => {
+      if (t) {
+        clearTimeout(t);
+      }
+      t = setTimeout(() => {
+        func.apply(this, args);
+        t = 0;
+      }, delay);
+    };
+  }
+
   enable() {
     const type = (Draggable.supportsTouch() ? 'touchstart' : 'mousedown');
     this.element.addEventListener(type, this['on' + type], { passive: false });
