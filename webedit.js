@@ -449,6 +449,22 @@ class Draggable {
     return { x, y };
   }
 
+  static getScrollOffset(element) {
+    let x = 0;
+    let y = 0;
+    let width = 0;
+    let height = 0;
+    element = element.parentNode;
+    while (element) {
+      x += element.scrollLeft || 0;
+      y += element.scrollTop || 0;
+      width += (element.scrollWidth - element.clientWidth) || 0;
+      height += (element.scrollHeight - element.clientHeight) || 0;
+      element = element.parentNode;
+    }
+    return { x, y, width, height };
+  }
+
   static debounce(func, delay) {
     let t = 0;
     return (...args) => {
