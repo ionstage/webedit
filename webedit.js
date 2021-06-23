@@ -431,9 +431,17 @@ class Draggable {
     this.ontouchstart = this.ontouchstart.bind(this);
     this.ontouchmove = this.ontouchmove.bind(this);
     this.ontouchend = this.ontouchend.bind(this);
+    this.onscroll = Draggable.debounce(this.onscroll.bind(this), 0);
     this.identifier = null;
     this.startPageX = 0;
     this.startPageY = 0;
+    this.startScrollX = 0;
+    this.startScrollY = 0;
+    this.startScrollWidth = 0;
+    this.startScrollHeight = 0;
+    this.dScrollX = 0;
+    this.dScrollY = 0;
+    this.scrollTarget = null;
   }
 
   static supportsTouch() {
@@ -455,7 +463,7 @@ class Draggable {
     let width = 0;
     let height = 0;
     element = element.parentNode;
-    while (element) {
+    while (element && element !== document && element !== document.documentElement) {
       x += element.scrollLeft || 0;
       y += element.scrollTop || 0;
       width += (element.scrollWidth - element.clientWidth) || 0;
@@ -491,30 +499,41 @@ class Draggable {
     this.element.removeEventListener(startType, this['on' + startType], { passive: false });
     document.removeEventListener(moveType, this['on' + moveType]);
     document.removeEventListener(endType, this['on' + endType]);
+    document.removeEventListener('scroll', this.onscroll, true);
   }
 
   onmousedown(event) {
     const offset = Draggable.getOffset(event.target);
     const x = event.clientX - offset.x;
     const y = event.clientY - offset.y;
+    const scrollOffset = Draggable.getScrollOffset(event.target);
     this.startPageX = event.pageX;
     this.startPageY = event.pageY;
+    this.startScrollX = scrollOffset.x;
+    this.startScrollY = scrollOffset.y;
+    this.startScrollWidth = scrollOffset.width;
+    this.startScrollHeight = scrollOffset.height;
+    this.dScrollX = 0;
+    this.dScrollY = 0;
+    this.scrollTarget = event.target;
     this.onstart.call(null, x, y, event);
     document.addEventListener('mousemove', this.onmousemove);
     document.addEventListener('mouseup', this.onmouseup);
+    document.addEventListener('scroll', this.onscroll, true);
   }
 
   onmousemove(event) {
-    const dx = event.pageX - this.startPageX;
-    const dy = event.pageY - this.startPageY;
+    const dx = event.pageX - this.startPageX + this.dScrollX;
+    const dy = event.pageY - this.startPageY + this.dScrollY;
     this.onmove.call(null, dx, dy, event);
   }
 
   onmouseup(event) {
-    const dx = event.pageX - this.startPageX;
-    const dy = event.pageY - this.startPageY;
+    const dx = event.pageX - this.startPageX + this.dScrollX;
+    const dy = event.pageY - this.startPageY + this.dScrollY;
     document.removeEventListener('mousemove', this.onmousemove);
     document.removeEventListener('mouseup', this.onmouseup);
+    document.removeEventListener('scroll', this.onscroll, true);
     this.onend.call(null, dx, dy, event);
   }
 
@@ -524,14 +543,23 @@ class Draggable {
     }
     const touch = event.changedTouches[0];
     const offset = Draggable.getOffset(event.target);
+    const scrollOffset = Draggable.getScrollOffset(event.target);
     const x = touch.clientX - offset.x;
     const y = touch.clientY - offset.y;
     this.identifier = touch.identifier;
     this.startPageX = touch.pageX;
     this.startPageY = touch.pageY;
+    this.startScrollX = scrollOffset.x;
+    this.startScrollY = scrollOffset.y;
+    this.startScrollWidth = scrollOffset.width;
+    this.startScrollHeight = scrollOffset.height;
+    this.dScrollX = 0;
+    this.dScrollY = 0;
+    this.scrollTarget = event.target;
     this.onstart.call(null, x, y, event);
     document.addEventListener('touchmove', this.ontouchmove);
     document.addEventListener('touchend', this.ontouchend);
+    document.addEventListener('scroll', this.onscroll, true);
   }
 
   ontouchmove(event) {
@@ -539,8 +567,8 @@ class Draggable {
     if (touch.identifier !== this.identifier) {
       return;
     }
-    const dx = touch.pageX - this.startPageX;
-    const dy = touch.pageY - this.startPageY;
+    const dx = touch.pageX - this.startPageX + this.dScrollX;
+    const dy = touch.pageY - this.startPageY + this.dScrollY;
     this.onmove.call(null, dx, dy, event);
   }
 
@@ -549,11 +577,20 @@ class Draggable {
     if (touch.identifier !== this.identifier) {
       return;
     }
-    const dx = touch.pageX - this.startPageX;
-    const dy = touch.pageY - this.startPageY;
+    const dx = touch.pageX - this.startPageX + this.dScrollX;
+    const dy = touch.pageY - this.startPageY + this.dScrollY;
     document.removeEventListener('touchmove', this.ontouchmove);
     document.removeEventListener('touchend', this.ontouchend);
+    document.removeEventListener('scroll', this.onscroll, true);
     this.onend.call(null, dx, dy, event);
+  }
+
+  onscroll() {
+    const scrollOffset = Draggable.getScrollOffset(this.scrollTarget);
+    const dScrollWidth = scrollOffset.width - this.startScrollWidth;
+    const dScrollHeight = scrollOffset.height - this.startScrollHeight;
+    this.dScrollX = scrollOffset.x - this.startScrollX - dScrollWidth;
+    this.dScrollY = scrollOffset.y - this.startScrollY - dScrollHeight;
   }
 }
 
