@@ -122,8 +122,8 @@ class DragTarget {
     const rect = element.getBoundingClientRect();
     return new DragTarget({
       element,
-      offsetLeft: offset.x + 1,
-      offsetTop: offset.y + 1,
+      offsetLeft: offset.x,
+      offsetTop: offset.y,
       offsetWidth: parseInt(style.width, 10),
       offsetHeight: parseInt(style.height, 10),
       outerWidth: rect.width,
@@ -141,7 +141,7 @@ class DragTarget {
     return [
       `#${this.element.id} {`,
       `  height: ${parseInt(style.height, 10)}px;`,
-      `  transform: translate(${offset.x + 1}px, ${offset.y + 1}px);`,
+      `  transform: translate(${offset.x}px, ${offset.y}px);`,
       `  width: ${parseInt(style.width, 10)}px;`,
       '}\n',
     ].join('\n');
@@ -161,7 +161,7 @@ class DragTarget {
 
   moveBy(dx, dy) {
     const offset = DragTarget.getOffset(this.element);
-    this.moveTo(offset.x + 1 + dx, offset.y + 1 + dy);
+    this.moveTo(offset.x + dx, offset.y + dy);
   }
 }
 
