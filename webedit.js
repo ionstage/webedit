@@ -610,20 +610,20 @@ class KeyHandler {
     this.renderer.update(this.onupdate);
   }
 
-  inputLeft(context) {
-    this.input(context.event, -1, 0);
+  inputLeft(event) {
+    this.input(event, -1, 0);
   }
 
-  inputUp(context) {
-    this.input(context.event, 0, -1);
+  inputUp(event) {
+    this.input(event, 0, -1);
   }
 
-  inputRight(context) {
-    this.input(context.event, 1, 0);
+  inputRight(event) {
+    this.input(event, 1, 0);
   }
 
-  inputDown(context) {
-    this.input(context.event, 0, 1);
+  inputDown(event) {
+    this.input(event, 0, 1);
   }
 
   onupdate() {
@@ -650,7 +650,7 @@ class KeyInput {
   onkeydown(event) {
     const handler = this.handlers[event.key.toLowerCase()];
     if (handler) {
-      handler({ event });
+      handler(event);
     }
   }
 }
