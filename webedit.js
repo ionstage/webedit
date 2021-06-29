@@ -247,7 +247,7 @@ class RightEdgeDragStrategy extends EdgeDragStrategy {
       return false;
     }
     const outerWidth = context.pointedTarget.outerWidth;
-    return outerWidth - 12 <= context.x && context.x <= outerWidth;
+    return (outerWidth - 12 <= context.x && context.x <= outerWidth);
   }
 
   onmove(targets, dx, _dy) {
@@ -264,7 +264,7 @@ class BottomEdgeDragStrategy extends EdgeDragStrategy {
       return false;
     }
     const outerHeight = context.pointedTarget.outerHeight;
-    return outerHeight - 12 <= context.y && context.y <= outerHeight;
+    return (outerHeight - 12 <= context.y && context.y <= outerHeight);
   }
 
   onmove(targets, _dx, dy) {
@@ -280,7 +280,7 @@ class LeftEdgeDragStrategy extends EdgeDragStrategy {
     if (!context.pointedTarget) {
       return false;
     }
-    return context.x >= 0 && context.x <= 12;
+    return (context.x >= 0 && context.x <= 12);
   }
 
   onmove(targets, dx, _dy) {
@@ -301,7 +301,7 @@ class TopEdgeDragStrategy extends EdgeDragStrategy {
     if (!context.pointedTarget) {
       return false;
     }
-    return context.y >= 0 && context.y <= 12;
+    return (context.y >= 0 && context.y <= 12);
   }
 
   onmove(targets, _dx, dy) {
