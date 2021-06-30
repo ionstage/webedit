@@ -220,9 +220,11 @@ class MoveDragStrategy extends DragStrategy {
   }
 
   onend(targets) {
+    let log = '';
     for (const target of targets) {
-      console.log(target.cssLog());
+      log += target.cssLog();
     }
+    console.log(log);
   }
 }
 
@@ -234,10 +236,12 @@ class EdgeDragStrategy extends DragStrategy {
   }
 
   onend(targets) {
+    let log = '';
     for (const target of targets) {
       target.removeClass('_webedit_resizing');
-      console.log(target.cssLog());
+      log += target.cssLog();
     }
+    console.log(log);
   }
 }
 
