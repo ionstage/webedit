@@ -174,7 +174,7 @@ class DragStrategy {
   }
 
   /* template */
-  match(_context) { return false; }
+  match(_pointedTarget, _x, _y) { return false; }
 
   start(targets) {
     this.renderer.update(this.onstart, targets);
@@ -207,8 +207,8 @@ class NoopDragStrategy extends DragStrategy {
 }
 
 class MoveDragStrategy extends DragStrategy {
-  match(context) {
-    return !!context.pointedTarget;
+  match(pointedTarget, _x, _y) {
+    return !!pointedTarget;
   }
 
   start(_targets) { /* do nothing */ }
@@ -246,12 +246,12 @@ class EdgeDragStrategy extends DragStrategy {
 }
 
 class RightEdgeDragStrategy extends EdgeDragStrategy {
-  match(context) {
-    if (!context.pointedTarget) {
+  match(pointedTarget, x, _y) {
+    if (!pointedTarget) {
       return false;
     }
-    const outerWidth = context.pointedTarget.outerWidth;
-    return (outerWidth - 12 <= context.x && context.x <= outerWidth);
+    const outerWidth = pointedTarget.outerWidth;
+    return (outerWidth - 12 <= x && x <= outerWidth);
   }
 
   onmove(targets, dx, _dy) {
@@ -263,12 +263,12 @@ class RightEdgeDragStrategy extends EdgeDragStrategy {
 }
 
 class BottomEdgeDragStrategy extends EdgeDragStrategy {
-  match(context) {
-    if (!context.pointedTarget) {
+  match(pointedTarget, _x, y) {
+    if (!pointedTarget) {
       return false;
     }
-    const outerHeight = context.pointedTarget.outerHeight;
-    return (outerHeight - 12 <= context.y && context.y <= outerHeight);
+    const outerHeight = pointedTarget.outerHeight;
+    return (outerHeight - 12 <= y && y <= outerHeight);
   }
 
   onmove(targets, _dx, dy) {
@@ -280,11 +280,11 @@ class BottomEdgeDragStrategy extends EdgeDragStrategy {
 }
 
 class LeftEdgeDragStrategy extends EdgeDragStrategy {
-  match(context) {
-    if (!context.pointedTarget) {
+  match(pointedTarget, x, _y) {
+    if (!pointedTarget) {
       return false;
     }
-    return (context.x >= 0 && context.x <= 12);
+    return (x >= 0 && x <= 12);
   }
 
   onmove(targets, dx, _dy) {
@@ -301,11 +301,11 @@ class LeftEdgeDragStrategy extends EdgeDragStrategy {
 }
 
 class TopEdgeDragStrategy extends EdgeDragStrategy {
-  match(context) {
-    if (!context.pointedTarget) {
+  match(pointedTarget, _x, y) {
+    if (!pointedTarget) {
       return false;
     }
-    return (context.y >= 0 && context.y <= 12);
+    return (y >= 0 && y <= 12);
   }
 
   onmove(targets, _dx, dy) {
@@ -327,8 +327,8 @@ class MultipleEdgeDragStrategy extends EdgeDragStrategy {
     this.strategies = [];
   }
 
-  match(context) {
-    return this.strategies.every(strategy => strategy.match(context));
+  match(pointedTarget, x, y) {
+    return this.strategies.every(strategy => strategy.match(pointedTarget, x, y));
   }
 
   onmove(targets, dx, dy) {
@@ -399,8 +399,7 @@ class DragHandler {
   }
 
   retrieveStrategy(pointedTarget, x, y) {
-    const context = { pointedTarget, x, y };
-    return this.strategies.find(strategy => strategy.match(context)) || this.noopStrategy;
+    return this.strategies.find(strategy => strategy.match(pointedTarget, x, y)) || this.noopStrategy;
   }
 
   start(x, y, event) {
