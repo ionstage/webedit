@@ -176,34 +176,34 @@ class DragStrategy {
   /* template */
   match(_pointedTarget, _x, _y) { return false; }
 
-  start(targets) {
-    this.renderer.update(this.onstart, targets);
+  start(pointedTarget, targets) {
+    this.renderer.update(this.onstart, pointedTarget, targets);
   }
 
-  move(targets, dx, dy) {
-    this.renderer.update(this.onmove, targets, dx, dy);
+  move(pointedTarget, targets, dx, dy) {
+    this.renderer.update(this.onmove, pointedTarget, targets, dx, dy);
   }
 
-  end(targets) {
-    this.renderer.update(this.onend, targets);
+  end(pointedTarget, targets) {
+    this.renderer.update(this.onend, pointedTarget, targets);
   }
 
   /* template */
-  onstart(_targets) {}
+  onstart(_pointedTarget, _targets) {}
 
   /* template */
-  onmove(_targets, _dx, _dy) {}
+  onmove(_pointedTarget, _targets, _dx, _dy) {}
 
   /* template */
-  onend(_targets) {}
+  onend(_pointedTarget, _targets) {}
 }
 
 class NoopDragStrategy extends DragStrategy {
-  start(_targets) { /* do nothing */ }
+  start(_pointedTarget, _targets) { /* do nothing */ }
 
-  move(_targets, _dx, _dy) { /* do nothing */ }
+  move(_pointedTarget, _targets, _dx, _dy) { /* do nothing */ }
 
-  end(_targets) { /* do nothing */ }
+  end(_pointedTarget, _targets) { /* do nothing */ }
 }
 
 class MoveDragStrategy extends DragStrategy {
@@ -211,15 +211,15 @@ class MoveDragStrategy extends DragStrategy {
     return !!pointedTarget;
   }
 
-  start(_targets) { /* do nothing */ }
+  start(_pointedTarget, _targets) { /* do nothing */ }
 
-  onmove(targets, dx, dy) {
+  onmove(_pointedTarget, targets, dx, dy) {
     for (const target of targets) {
       target.moveTo(target.offsetLeft + dx, target.offsetTop + dy);
     }
   }
 
-  onend(targets) {
+  onend(_pointedTarget, targets) {
     let log = '';
     for (const target of targets) {
       log += target.cssLog();
@@ -229,13 +229,13 @@ class MoveDragStrategy extends DragStrategy {
 }
 
 class EdgeDragStrategy extends DragStrategy {
-  onstart(targets) {
+  onstart(_pointedTarget, targets) {
     for (const target of targets) {
       target.addClass('_webedit_resizing');
     }
   }
 
-  onend(targets) {
+  onend(_pointedTarget, targets) {
     let log = '';
     for (const target of targets) {
       target.removeClass('_webedit_resizing');
@@ -254,7 +254,7 @@ class RightEdgeDragStrategy extends EdgeDragStrategy {
     return (outerWidth - 12 <= x && x <= outerWidth);
   }
 
-  onmove(targets, dx, _dy) {
+  onmove(_pointedTarget, targets, dx, _dy) {
     for (const target of targets) {
       const width = target.offsetWidth + dx;
       target.css({ width: Math.max(width, 24) + 'px' });
@@ -271,7 +271,7 @@ class BottomEdgeDragStrategy extends EdgeDragStrategy {
     return (outerHeight - 12 <= y && y <= outerHeight);
   }
 
-  onmove(targets, _dx, dy) {
+  onmove(_pointedTarget, targets, _dx, dy) {
     for (const target of targets) {
       const height = target.offsetHeight + dy;
       target.css({ height: Math.max(height, 24) + 'px' });
@@ -287,7 +287,7 @@ class LeftEdgeDragStrategy extends EdgeDragStrategy {
     return (x >= 0 && x <= 12);
   }
 
-  onmove(targets, dx, _dy) {
+  onmove(_pointedTarget, targets, dx, _dy) {
     for (const target of targets) {
       let width = target.offsetWidth - dx;
       if (width < 24) {
@@ -308,7 +308,7 @@ class TopEdgeDragStrategy extends EdgeDragStrategy {
     return (y >= 0 && y <= 12);
   }
 
-  onmove(targets, _dx, dy) {
+  onmove(_pointedTarget, targets, _dx, dy) {
     for (const target of targets) {
       let height = target.offsetHeight - dy;
       if (height < 24) {
@@ -331,8 +331,8 @@ class MultipleEdgeDragStrategy extends EdgeDragStrategy {
     return this.strategies.every(strategy => strategy.match(pointedTarget, x, y));
   }
 
-  onmove(targets, dx, dy) {
-    this.strategies.forEach(strategy => strategy.onmove(targets, dx, dy));
+  onmove(_pointedTarget, targets, dx, dy) {
+    this.strategies.forEach(strategy => strategy.onmove(_pointedTarget, targets, dx, dy));
   }
 }
 
@@ -410,15 +410,15 @@ class DragHandler {
       event.preventDefault();
     }
     this.strategy = this.retrieveStrategy(this.pointedTarget, x, y);
-    this.strategy.start(this.targets);
+    this.strategy.start(this.pointedTarget, this.targets);
   }
 
   move(dx, dy) {
-    this.strategy.move(this.targets, dx, dy);
+    this.strategy.move(this.pointedTarget, this.targets, dx, dy);
   }
 
   end() {
-    this.strategy.end(this.targets);
+    this.strategy.end(this.pointedTarget, this.targets);
   }
 }
 
