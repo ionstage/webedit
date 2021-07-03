@@ -229,19 +229,13 @@ class MoveDragStrategy extends DragStrategy {
 }
 
 class EdgeDragStrategy extends DragStrategy {
-  onstart(_pointedTarget, targets) {
-    for (const target of targets) {
-      target.addClass('_webedit_resizing');
-    }
+  onstart(pointedTarget, _targets) {
+    pointedTarget.addClass('_webedit_resizing');
   }
 
-  onend(_pointedTarget, targets) {
-    let log = '';
-    for (const target of targets) {
-      target.removeClass('_webedit_resizing');
-      log += target.cssLog();
-    }
-    console.log(log);
+  onend(pointedTarget, _targets) {
+    pointedTarget.removeClass('_webedit_resizing');
+    console.log(pointedTarget.cssLog());
   }
 }
 
@@ -254,11 +248,9 @@ class RightEdgeDragStrategy extends EdgeDragStrategy {
     return (outerWidth - 12 <= x && x <= outerWidth);
   }
 
-  onmove(_pointedTarget, targets, dx, _dy) {
-    for (const target of targets) {
-      const width = target.offsetWidth + dx;
-      target.css({ width: Math.max(width, 24) + 'px' });
-    }
+  onmove(pointedTarget, _targets, dx, _dy) {
+    const width = pointedTarget.offsetWidth + dx;
+    pointedTarget.css({ width: Math.max(width, 24) + 'px' });
   }
 }
 
@@ -271,11 +263,9 @@ class BottomEdgeDragStrategy extends EdgeDragStrategy {
     return (outerHeight - 12 <= y && y <= outerHeight);
   }
 
-  onmove(_pointedTarget, targets, _dx, dy) {
-    for (const target of targets) {
-      const height = target.offsetHeight + dy;
-      target.css({ height: Math.max(height, 24) + 'px' });
-    }
+  onmove(pointedTarget, _targets, _dx, dy) {
+    const height = pointedTarget.offsetHeight + dy;
+    pointedTarget.css({ height: Math.max(height, 24) + 'px' });
   }
 }
 
@@ -287,16 +277,14 @@ class LeftEdgeDragStrategy extends EdgeDragStrategy {
     return (x >= 0 && x <= 12);
   }
 
-  onmove(_pointedTarget, targets, dx, _dy) {
-    for (const target of targets) {
-      let width = target.offsetWidth - dx;
-      if (width < 24) {
-        dx = target.offsetWidth - 24;
-        width = 24;
-      }
-      target.moveTo(target.offsetLeft + dx, target.offsetTop);
-      target.css({ width: width + 'px' });
+  onmove(pointedTarget, _targets, dx, _dy) {
+    let width = pointedTarget.offsetWidth - dx;
+    if (width < 24) {
+      dx = pointedTarget.offsetWidth - 24;
+      width = 24;
     }
+    pointedTarget.moveTo(pointedTarget.offsetLeft + dx, pointedTarget.offsetTop);
+    pointedTarget.css({ width: width + 'px' });
   }
 }
 
@@ -308,16 +296,14 @@ class TopEdgeDragStrategy extends EdgeDragStrategy {
     return (y >= 0 && y <= 12);
   }
 
-  onmove(_pointedTarget, targets, _dx, dy) {
-    for (const target of targets) {
-      let height = target.offsetHeight - dy;
-      if (height < 24) {
-        dy = target.offsetHeight - 24;
-        height = 24;
-      }
-      target.moveTo(target.offsetLeft, target.offsetTop + dy);
-      target.css({ height: height + 'px' });
+  onmove(pointedTarget, _targets, _dx, dy) {
+    let height = pointedTarget.offsetHeight - dy;
+    if (height < 24) {
+      dy = pointedTarget.offsetHeight - 24;
+      height = 24;
     }
+    pointedTarget.moveTo(pointedTarget.offsetLeft, pointedTarget.offsetTop + dy);
+    pointedTarget.css({ height: height + 'px' });
   }
 }
 
