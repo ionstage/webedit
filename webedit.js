@@ -317,8 +317,8 @@ class MultipleEdgeDragStrategy extends EdgeDragStrategy {
     return this.strategies.every(strategy => strategy.match(pointedTarget, x, y));
   }
 
-  onmove(_pointedTarget, targets, dx, dy) {
-    this.strategies.forEach(strategy => strategy.onmove(_pointedTarget, targets, dx, dy));
+  onmove(pointedTarget, targets, dx, dy) {
+    this.strategies.forEach(strategy => strategy.onmove(pointedTarget, targets, dx, dy));
   }
 }
 
