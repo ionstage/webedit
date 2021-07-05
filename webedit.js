@@ -131,8 +131,12 @@ class DragTarget {
     });
   }
 
-  css(props) {
-    Object.keys(props).forEach(key => (this.element.style[key] = props[key]));
+  setWidth(width) {
+    this.element.style.width = width + 'px';
+  }
+
+  setHeight(height) {
+    this.element.style.height = height + 'px';
   }
 
   cssLog() {
@@ -250,7 +254,7 @@ class RightEdgeDragStrategy extends EdgeDragStrategy {
 
   onmove(pointedTarget, _targets, dx, _dy) {
     const width = pointedTarget.offsetWidth + dx;
-    pointedTarget.css({ width: Math.max(width, 24) + 'px' });
+    pointedTarget.setWidth(Math.max(width, 24));
   }
 }
 
@@ -265,7 +269,7 @@ class BottomEdgeDragStrategy extends EdgeDragStrategy {
 
   onmove(pointedTarget, _targets, _dx, dy) {
     const height = pointedTarget.offsetHeight + dy;
-    pointedTarget.css({ height: Math.max(height, 24) + 'px' });
+    pointedTarget.setHeight(Math.max(height, 24));
   }
 }
 
@@ -284,7 +288,7 @@ class LeftEdgeDragStrategy extends EdgeDragStrategy {
       width = 24;
     }
     pointedTarget.moveTo(pointedTarget.offsetLeft + dx, pointedTarget.offsetTop);
-    pointedTarget.css({ width: width + 'px' });
+    pointedTarget.setWidth(width);
   }
 }
 
@@ -303,7 +307,7 @@ class TopEdgeDragStrategy extends EdgeDragStrategy {
       height = 24;
     }
     pointedTarget.moveTo(pointedTarget.offsetLeft, pointedTarget.offsetTop + dy);
-    pointedTarget.css({ height: height + 'px' });
+    pointedTarget.setHeight(height);
   }
 }
 
