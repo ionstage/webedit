@@ -311,46 +311,67 @@ class TopEdgeDragStrategy extends EdgeDragStrategy {
   }
 }
 
-class MultipleEdgeDragStrategy extends EdgeDragStrategy {
-  constructor(props) {
-    super(props);
-    this.strategies = [];
-  }
-
+class BottomRightCornerDragStrategy extends EdgeDragStrategy {
   match(pointedTarget, x, y) {
-    return this.strategies.every(strategy => strategy.match(pointedTarget, x, y));
+    const rightMatched = RightEdgeDragStrategy.prototype.match.call(this, pointedTarget, x, y);
+    const bottomMatched = BottomEdgeDragStrategy.prototype.match.call(this, pointedTarget, x, y);
+    return rightMatched && bottomMatched;
   }
 
   onmove(pointedTarget, targets, dx, dy) {
-    this.strategies.forEach(strategy => strategy.onmove(pointedTarget, targets, dx, dy));
+    RightEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
+    BottomEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
   }
 }
 
-class BottomRightCornerDragStrategy extends MultipleEdgeDragStrategy {
-  constructor(props) {
-    super(props);
-    this.strategies.push(new RightEdgeDragStrategy(props), new BottomEdgeDragStrategy(props));
+class BottomLeftCornerDragStrategy extends EdgeDragStrategy {
+  match(pointedTarget, x, y) {
+    const leftMatched = LeftEdgeDragStrategy.prototype.match.call(this, pointedTarget, x, y);
+    const bottomMatched = BottomEdgeDragStrategy.prototype.match.call(this, pointedTarget, x, y);
+    return leftMatched && bottomMatched;
+  }
+
+  onmove(pointedTarget, targets, dx, dy) {
+    LeftEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
+    BottomEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
   }
 }
 
-class BottomLeftCornerDragStrategy extends MultipleEdgeDragStrategy {
-  constructor(props) {
-    super(props);
-    this.strategies.push(new LeftEdgeDragStrategy(props), new BottomEdgeDragStrategy(props));
+class TopRightCornerDragStrategy extends EdgeDragStrategy {
+  match(pointedTarget, x, y) {
+    const rightMatched = RightEdgeDragStrategy.prototype.match.call(this, pointedTarget, x, y);
+    const topMatched = TopEdgeDragStrategy.prototype.match.call(this, pointedTarget, x, y);
+    return rightMatched && topMatched;
+  }
+
+  onmove(pointedTarget, targets, dx, dy) {
+    RightEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
+    TopEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
   }
 }
 
-class TopRightCornerDragStrategy extends MultipleEdgeDragStrategy {
-  constructor(props) {
-    super(props);
-    this.strategies.push(new RightEdgeDragStrategy(props), new TopEdgeDragStrategy(props));
+class TopLeftCornerDragStrategy extends EdgeDragStrategy {
+  match(pointedTarget, x, y) {
+    const leftMatched = LeftEdgeDragStrategy.prototype.match.call(this, pointedTarget, x, y);
+    const topMatched = TopEdgeDragStrategy.prototype.match.call(this, pointedTarget, x, y);
+    return leftMatched && topMatched;
   }
-}
 
-class TopLeftCornerDragStrategy extends MultipleEdgeDragStrategy {
-  constructor(props) {
-    super(props);
-    this.strategies.push(new LeftEdgeDragStrategy(props), new TopEdgeDragStrategy(props));
+  onmove(pointedTarget, _targets, dx, dy) {
+    // change x and y simultaneously
+    let width = pointedTarget.offsetWidth - dx;
+    if (width < 24) {
+      dx = pointedTarget.offsetWidth - 24;
+      width = 24;
+    }
+    let height = pointedTarget.offsetHeight - dy;
+    if (height < 24) {
+      dy = pointedTarget.offsetHeight - 24;
+      height = 24;
+    }
+    pointedTarget.moveTo(pointedTarget.offsetLeft + dx, pointedTarget.offsetTop + dy);
+    pointedTarget.setWidth(width);
+    pointedTarget.setHeight(height);
   }
 }
 
