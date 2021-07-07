@@ -253,8 +253,8 @@ class RightEdgeDragStrategy extends EdgeDragStrategy {
   }
 
   onmove(pointedTarget, _targets, dx, _dy) {
-    const width = pointedTarget.offsetWidth + dx;
-    pointedTarget.setWidth(Math.max(width, 24));
+    const width = Math.max(pointedTarget.offsetWidth + dx, 24);
+    pointedTarget.setWidth(width);
   }
 }
 
@@ -268,8 +268,8 @@ class BottomEdgeDragStrategy extends EdgeDragStrategy {
   }
 
   onmove(pointedTarget, _targets, _dx, dy) {
-    const height = pointedTarget.offsetHeight + dy;
-    pointedTarget.setHeight(Math.max(height, 24));
+    const height = Math.max(pointedTarget.offsetHeight + dy, 24);
+    pointedTarget.setHeight(height);
   }
 }
 
