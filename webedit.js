@@ -164,8 +164,7 @@ class DragTarget {
   }
 
   moveBy(dx, dy) {
-    const offset = DragTarget.getOffset(this.element);
-    this.moveTo(offset.x + dx, offset.y + dy);
+    this.moveTo(this.offsetLeft + dx, this.offsetTop + dy);
   }
 }
 
