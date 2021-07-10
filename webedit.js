@@ -326,6 +326,22 @@ class MultipleEdgeDragStrategy extends EdgeDragStrategy {
   matchTop(pointedTarget, x, y) {
     return TopEdgeDragStrategy.prototype.match.call(this, pointedTarget, x, y);
   }
+
+  onmoveAtRight(pointedTarget, targets, dx, dy) {
+    RightEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
+  }
+
+  onmoveAtBottom(pointedTarget, targets, dx, dy) {
+    BottomEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
+  }
+
+  onmoveAtLeft(pointedTarget, targets, dx, dy) {
+    LeftEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
+  }
+
+  onmoveAtTop(pointedTarget, targets, dx, dy) {
+    TopEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
+  }
 }
 
 class BottomRightCornerDragStrategy extends MultipleEdgeDragStrategy {
@@ -334,8 +350,8 @@ class BottomRightCornerDragStrategy extends MultipleEdgeDragStrategy {
   }
 
   onmove(pointedTarget, targets, dx, dy) {
-    RightEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
-    BottomEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
+    this.onmoveAtRight(pointedTarget, targets, dx, dy);
+    this.onmoveAtBottom(pointedTarget, targets, dx, dy);
   }
 }
 
@@ -345,8 +361,8 @@ class BottomLeftCornerDragStrategy extends MultipleEdgeDragStrategy {
   }
 
   onmove(pointedTarget, targets, dx, dy) {
-    LeftEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
-    BottomEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
+    this.onmoveAtLeft(pointedTarget, targets, dx, dy);
+    this.onmoveAtBottom(pointedTarget, targets, dx, dy);
   }
 }
 
@@ -356,8 +372,8 @@ class TopRightCornerDragStrategy extends MultipleEdgeDragStrategy {
   }
 
   onmove(pointedTarget, targets, dx, dy) {
-    RightEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
-    TopEdgeDragStrategy.prototype.onmove.call(this, pointedTarget, targets, dx, dy);
+    this.onmoveAtRight(pointedTarget, targets, dx, dy);
+    this.onmoveAtTop(pointedTarget, targets, dx, dy);
   }
 }
 
