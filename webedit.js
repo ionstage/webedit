@@ -578,12 +578,12 @@ class Draggable {
       return;
     }
     const touch = event.changedTouches[0];
-    const offset = Draggable.getOffset(event.target);
-    const scrollOffset = Draggable.getScrollOffset(event.target);
+    const offset = Draggable.getOffset(touch.target);
+    const scrollOffset = Draggable.getScrollOffset(touch.target);
     const x = touch.pageX - offset.x;
     const y = touch.pageY - offset.y;
     this.identifier = touch.identifier;
-    this.pointer = new DragPointer(event.target, touch.pageX, touch.pageY, scrollOffset);
+    this.pointer = new DragPointer(touch.target, touch.pageX, touch.pageY, scrollOffset);
     this.onstart.call(null, x, y, event);
     document.addEventListener('touchmove', this.ontouchmove);
     document.addEventListener('touchend', this.ontouchend);
