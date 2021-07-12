@@ -1,5 +1,5 @@
 /**
- * webedit v0.1.6
+ * webedit v0.1.7
  * (c) 2019 iOnStage
  * Released under the MIT License.
  */
